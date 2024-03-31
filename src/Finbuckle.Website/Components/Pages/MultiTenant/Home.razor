@@ -1,0 +1,159 @@
+@page "/MultiTenant"
+
+<PageTitle>MultiTenant Home</PageTitle>
+
+<div class="header py-5">
+    <div class="container text-light">
+        <h1 class="display-1">Finbuckle.<wbr/>MultiTenant</h1>
+        <p class="lead">
+            a lightweight and open-source multitenancy library for .NET
+        </p>
+    </div>
+</div>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#subnavbarSupportedContent" aria-controls="subnavbarSupportedContent" aria-expanded="false" aria-label="Toggle subnavigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="subnavbarSupportedContent">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/MultiTenant"><i class="fas fa-home"></i> Home</a>
+                <a class="nav-item nav-link" href="/MultiTenant/Docs/GettingStarted"><i class="fas fa-book"></i> Docs</a>
+                <a class="nav-item nav-link" href="https://github.com/Finbuckle/Finbuckle.MultiTenant"><i class="fab fa-github"></i> GitHub</a>
+                <a class="nav-item nav-link" href="https://github.com/sponsors/Finbuckle"><i class="fas fa-heart"></i> Sponsor</a>
+                <a class="nav-item nav-link" href="https://www.nuget.org/packages/Finbuckle.MultiTenant/">
+                    <img src="https://buildstats.info/nuget/finbuckle.multitenant" alt="nuget badge icon">
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container d-flex flex-column align-items-center">
+    <div class="border border-1 mt-4 p-3 w-75">
+        <p>
+            Help support Finbuckle open source by placing your ad here!<br/>
+            <a asp-page="/Contact">Contact us</a> to target our highly technical .NET developer user base.
+        </p>
+    </div>
+    <div class="card my-4 border-0">
+        <div class="card-body d-flex">
+            <img src="images/dotnetfoundation.png" height="80" class="me-3" alt="dotnet foundation logo"/>
+            <div>
+                <h5 class="card-title">Independent. Innovative. Always open source.</h5>
+                <p class="card-text">Finbuckle.MultiTenant is proud to be a member of the <a href="https://dotnetfoundation.org">.NET Foundation</a>.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-lg-2 g-4 justify-content-center">
+        <div class="col">
+            <div class="card feature-card shadow">
+                <div class="card-body d-flex align-items-center">
+                    <i class="feature-card-icon fab fa-github fa-fw fa-4x me-3"></i>
+                    <div>
+                        <h5 class="card-title">Open Source</h5>
+                        <p class="card-text">Source code available on GitHub under the Apache 2.0 license.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div claass="col">
+            <div class="card feature-card shadow">
+                <div class="card-body d-flex align-items-center">
+                    <i class="feature-card-icon fas fa-feather fa-fw fa-4x me-3"></i>
+                    <div>
+                        <h5 class="card-title">Lightweight</h5>
+                        <p class="card-text">Uses standard .NET conventions and patterns allowing &quot;drop-in&quot; multitenancy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card feature-card shadow">
+                <div class="card-body d-flex align-items-center">
+                    <i class="feature-card-icon fas fa-users fa-fw fa-4x me-3"></i>
+                    <div>
+                        <h5 class="card-title">Tenant Resolution</h5>
+                        <p class="card-text">Detect tenants using powerful built-in and customizable logic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card feature-card shadow">
+                <div class="card-body d-flex align-items-center">
+                    <i class="feature-card-icon fas fa-database fa-fw fa-4x me-3"></i>
+                    <div>
+                        <h5 class="card-title">Data Isolation</h5>
+                        <p class="card-text">Separate tenant data using a shared, separate, or hybrid database approaches.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card feature-card shadow">
+                <div class="card-body d-flex align-items-center">
+                    <i class="feature-card-icon fas fa-code-branch fa-fw fa-4x me-3"></i>
+                    <div>
+                        <h5 class="card-title">.NET Support</h5>
+                        <p class="card-text">Works with all Microsoft supported versions of .NET.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card feature-card shadow">
+                <div class="card-body d-flex align-items-center">
+                    <i class="feature-card-icon fas fa-users-cog fa-fw fa-4x me-3"></i>
+                    <div>
+                        <h5 class="card-title">Behavior</h5>
+                        <p class="card-text">Configure application behavior uniquely for each tenant.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="parallax shadow-lg my-5"></div>
+
+<div id="getting-started" class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col col-md-8">
+            GETTING STARTED CONTENT HERE
+            @* @Html.Raw(ViewData["GettingStartedContent"]) *@
+        </div>
+    </div>
+</div>
+
+<div class="parallax shadow-lg my-5"></div>
+
+<div id="learn-more" class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-8">
+            <h2>Learn More</h2>
+            <p>
+                <a href="https://github.com/Finbuckle/Finbuckle.MultiTenant">GitHub</a>
+            </p>
+            <p>
+                <a href="https://github.com/Finbuckle/Finbuckle.MultiTenant/issues">GitHub Issues</a>
+            </p>
+            <p>
+                <a href="https://github.com/Finbuckle/Finbuckle.MultiTenant/discussions">GitHub Discussions</a>
+            </p>
+            <p>
+                <a href="https://github.com/sponsors/Finbuckle">GitHub Sponsor</a>
+            </p>
+            <p>
+                <a href="/MultiTenant/Docs">Documentation</a>
+            </p>
+            <p>
+                <a href="https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples">Sample Projects</a> (Sample projects for older .NET versions can be found in earlier tagged commits.)
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    
+}

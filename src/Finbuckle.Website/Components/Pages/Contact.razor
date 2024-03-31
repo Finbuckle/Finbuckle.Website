@@ -1,0 +1,123 @@
+@page "/Contact"
+@using System.ComponentModel.DataAnnotations
+@using Finbuckle.Website.Infrastructure
+@inject MailService MailService
+@inject ILogger<Contact> Logger
+
+<PageTitle>Contact</PageTitle>
+
+<div class="vh-100-with-navbar bg-fb-squares-light overflow-auto d-flex flex-column justify-content-start align-items-center">
+    <div class="container flex-fill bg-body shadow pt-5">
+        <div class="row">
+            <div class="col-md-auto col-lg-6">
+                <h1>Contact</h1>
+                
+                @if (_error)
+                {
+                    <p class="lead text-danger">
+                        There was an error submitting the contact form! Please try again.
+                    </p>
+                }
+                
+                @if (_submitted)
+                {
+                    <p class="lead">Thank you for reaching out!</p>
+                }
+                else
+                {
+                    <p class="lead">What's on your mind?</p>
+
+                    <EditForm FormName="contact-form" Model="Model" OnValidSubmit="ValidSubmit" OnInvalidSubmit="InvalidSubmit">
+                        <DataAnnotationsValidator/>
+                        <div class="mt-4">
+                            <label for="email" class="form-label">@nameof(InputModel.Email)</label>
+                            <InputText @bind-Value="Model!.Email" id="email" class="@_emailClasses"/>
+                            <ValidationMessage For="() => Model!.Email" class="invalid-feedback"/>
+                        </div>
+                        <div class="mt-4">
+                            <label for="company" class="form-label">@nameof(InputModel.Company)</label>
+                            <InputText @bind-Value="Model!.Company" id="company" class="form-control"/>
+                        </div>
+                        <div class="mt-4 d-none">
+                            <label for="subject" class="form-label">@nameof(InputModel.Subject)</label>
+                            <InputText @bind-Value="Model!.Subject" id="subject" class="form-control"/>
+                        </div>
+                        <div class="mt-4">
+                            <label for="message" class="form-label">@nameof(InputModel.Message)</label>
+                            <InputTextArea @bind-Value="Model!.Message" id="message" class="@_messageClasses" rows="5"/>
+                            <ValidationMessage For="() => Model!.Message" class="invalid-feedback"/>
+                        </div>
+                        <button type="submit" class="mt-3 btn btn-primary bg-fb-blue">Send Message</button>
+                    </EditForm>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public InputModel? Model { get; set; }
+
+    protected override void OnInitialized() =>
+        Model ??= new InputModel();
+
+    private async Task InvalidSubmit(EditContext editContext)
+    {
+        if(!editContext.IsValid(()=>Model!.Email!))
+            _emailClasses += " is-invalid";
+        
+        if(!editContext.IsValid(()=>Model!.Message!))
+            _messageClasses += " is-invalid";
+    }
+
+    private async Task ValidSubmit()
+    {
+        var body = $"{Model!.Email}\n\n{Model.Company}\n\n{Model.Message}";
+        try
+        {
+            if (string.IsNullOrEmpty(Model.Subject))
+                await MailService.SendTextEmailAsync("contact@finbuckle.com",
+                    $"New contact from {Model.Company}", body);
+            else
+            {
+                Logger.LogInformation("Spam contact form submission detected!");
+            }
+        }
+        catch (Exception e)
+        {
+            Logger.LogError($"Contact Form Exception: {e.Message}");
+            _error = true;
+        }
+
+        _submitted = true;
+    }
+
+
+    private bool _error = false;
+    private bool _submitted = false;
+    private string _emailClasses = "form-control";
+    private string _messageClasses = "form-control";
+
+    public class InputModel
+    {
+        [EmailAddress]
+        [Required]
+        [Display(Name = "Email")]
+        public string? Email { get; set; }
+
+        [Display(Name = "Company")]
+        [MaxLength(100)]
+        public string? Company { get; set; }
+
+        [Display(Name = "Subject")]
+        [MaxLength(100)]
+        public string? Subject { get; set; }
+
+        [Required]
+        [Display(Name = "Message")]
+        [MaxLength(5000)]
+        public string? Message { get; set; }
+    }
+
+}

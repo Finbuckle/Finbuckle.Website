@@ -1,0 +1,125 @@
+:root {
+    --fb-dark-orange: #b74d06;
+    --fb-orange: #ff6d0b;
+    --fb-gray: #bfbfbf;
+    --fb-blue: #094074;
+    --fb-light-blue: #3c6997;
+}
+
+/*.was-validated:invalid {*/
+/*    box-shadow: 0 0 5px 1px red;*/
+/*}*/
+
+/*input:focus:invalid {*/
+/*    box-shadow: none;*/
+/*}*/
+
+/*textarea:invalid {*/
+/*    box-shadow: 0 0 5px 1px red;*/
+/*}*/
+
+/*textarea:focus:invalid {*/
+/*    box-shadow: none;*/
+/*}*/
+
+html {
+    scroll-behavior: smooth;
+}
+
+h2 {
+    margin-top: 3rem;
+}
+
+.text-fb-blue {
+    color: var(--fb-light-blue);
+}
+
+.bg-fb-blue {
+    border-color: var(--fb-light-blue);
+    background-color: var(--fb-light-blue);
+}
+
+.bg-fb-blue:hover {
+    border-color: var(--fb-blue);
+    background-color: var(--fb-blue);
+}
+
+.active {
+    font-weight: bold;
+}
+
+.vh-100-with-navbar {
+    height: calc(100vh - 56px);
+}
+
+.vh-center-with-navbar {
+    position: relative;
+    top: -28px;
+}
+
+.bg-fb-squares-light {
+    background-image: url("/images/squares-light.svg");
+    /* background by SVGBackgrounds.com */
+    background-size: cover;
+    background-position: center;
+    min-height: 500px;
+}
+
+.bg-fb-dark {
+    background-image: url("/images/background3.jpg");
+    background-size: cover;
+    min-height: 500px;
+}
+
+.bg-fb-light {
+    min-height: 500px;
+}
+
+.big-image {
+    /*max-height: 250px;*/
+    /*overflow: hidden;*/
+}
+
+.big-image img{
+    max-height: 256px;
+    object-fit: contain;
+}
+
+
+
+.feature-card {
+    height: 120px;
+    color: var(--fb-light-blue);
+}
+
+.feature-card-icon {
+    color: var(--fb-light-blue);
+}
+
+.service-card {
+    /*width: 18rem;*/
+    height: 100%;
+    color: var(--fb-light-blue);
+}
+
+pre > code {
+    margin-left: 2rem;
+    border-left: 1px solid lightgrey;
+    word-wrap: normal;
+}
+
+pre + p {
+    margin-top: 3rem;
+}
+
+.parallax {
+    background-image: url("../images/background3.jpg");
+    height: 80px;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
+.validation-summary-errors {
+    color: red;
+}

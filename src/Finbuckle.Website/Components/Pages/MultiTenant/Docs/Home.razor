@@ -1,0 +1,53 @@
+@page "/MultiTenant/Docs/{pageId}"
+@page "/MultiTenant/Docs/{version:regex(^v\\d+\\.\\d+\\.\\d+$)}/{pageId}"
+@page "/MultiTenant/Docs/{version}/{pageId}"
+@using Finbuckle.Website.Infrastructure
+@inject DocVersionService DocVersionService
+
+<PageTitle>MultiTenant Docs</PageTitle>
+
+<div class="header py-5">
+    <div class="container text-light">
+        <p class="display-4">Finbuckle.<wbr/>MultiTenant Docs</p>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#subnavbarSupportedContent" aria-controls="subnavbarSupportedContent" aria-expanded="false" aria-label="Toggle subnavigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="subnavbarSupportedContent">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/MultiTenant"><i class="fas fa-home"></i> Home</a>
+                <a class="nav-item nav-link" href="/MultiTenant/Docs/GettingStarted"><i class="fas fa-book"></i> Docs</a>
+                <a class="nav-item nav-link" href="https://github.com/Finbuckle/Finbuckle.MultiTenant"><i class="fab fa-github"></i> GitHub</a>
+                <a class="nav-item nav-link" href="https://github.com/sponsors/Finbuckle"><i class="fas fa-heart"></i> Sponsor</a>
+                <a class="nav-item nav-link" href="https://www.nuget.org/packages/Finbuckle.MultiTenant/">
+                    <img src="https://buildstats.info/nuget/finbuckle.multitenant" alt="nuget badge icon">
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div>
+    <DocView Version="_version" PageId="@PageId"></DocView>
+</div>
+
+@code {
+    private Version? _version;
+    [Parameter] public string? Version { get; set; }
+    [Parameter] public string PageId { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        if (Version is null)
+        {
+            _version = DocVersionService.LatestVersion;
+        }
+        else if (!System.Version.TryParse(Version.Remove(0, 1), out _version))
+            _version = new Version();
+    }
+
+}

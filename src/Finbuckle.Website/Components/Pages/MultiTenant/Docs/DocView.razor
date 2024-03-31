@@ -1,0 +1,146 @@
+@attribute [StreamRendering]
+@using System.Text.RegularExpressions
+@using Finbuckle.Website.Infrastructure
+@using Markdig
+@using Microsoft.AspNetCore.Components.Sections
+@inject ILogger<DocView> Logger
+@inject DocVersionService DocVersionService
+@inject IHttpClientFactory HttpClientFactory
+
+<div class="mt-4 container">
+    @if (_content is null)
+    {
+        <div id="docs-nav" class="d-flex justify-content-center">
+            <div class="spinner-grow text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 col-xl-2">
+                <nav class="nav flex-column">
+                    <div style="">
+                        <div class="d-xl-none me-auto d-inline-block">
+                            <div class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle fs-4 px-0" data-bs-toggle="dropdown">
+                                    v@(Version)
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var version in DocVersionService.LatestMinorVersions.Where(dv => !dv.Deprecated))
+                                    {
+                                    <li>
+                                        <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
+                                    </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="dropdown d-xl-none">
+                                <a href="#" class="nav-link dropdown-toggle px-0" data-bs-toggle="dropdown">
+                                    @(_docVersion.Index[PageId])
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var page in _docVersion.Index)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item nav-link" href="@(page.Key)">@((MarkupString)page.Value)</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="d-none d-xl-block">
+                            <div class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle fs-4" data-bs-toggle="dropdown">
+                                    v@(Version)
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var version in DocVersionService.LatestMinorVersions.Where(dv => !dv.Deprecated))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            @foreach (var page in _docVersion.Index)
+                            {
+                                if (PageId == page.Key)
+                                {
+                                    <a class="nav-link active" href="@(page.Key)">@((MarkupString)page.Value)</a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link" href="@(page.Key)">@((MarkupString)page.Value)</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-sm-8 col-lg-9 col-xl-8" style="scroll-behavior: smooth">
+                @((MarkupString)_content)
+            </div>
+            <div id="docs-nav" class="col-sm-4 col-lg-3 col-xl-2 d-none d-sm-block">
+                <nav class="nav flex-column sticky-top" style="">
+                    <div class="ps-3 text-secondary">On this page</div>
+                    <hr/>
+                    @foreach (var section in _sections)
+                    {
+                        <a class="nav-link link-secondary text-nowrap" href="#@(section.id)">@((MarkupString)section.title)</a>
+                    }
+                </nav>
+            </div>
+        </div>
+    }
+</div>
+
+<SectionContent SectionName="scripts">
+    <script>
+        var scrollSpy = new bootstrap.ScrollSpy(document.body, {
+            target: '#docs-nav'
+        })
+    </script>
+</SectionContent>
+
+@code {
+    private DocVersion _docVersion = default!;
+    private string? _content;
+    private List<(string id, string title)> _sections = [];
+
+    [Parameter] public Version Version { get; set; } = default!;
+    [Parameter] public string PageId { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!DocVersionService.Versions.Any())
+            await DocVersionService.LoadAsync();
+
+        _docVersion = DocVersionService.Versions.Single(dv => dv.Version == Version);
+
+        var client = HttpClientFactory.CreateClient("/MultiTenant/Docs");
+        var response = await client.GetAsync($"v{Version}/docs/{PageId}.md");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var markdown = await response.Content.ReadAsStringAsync();
+
+
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
+            _content = Markdown.ToHtml(markdown, pipeline);
+
+            var sections = Regex.Matches(_content, """^<h2 id="(.+)">(.+)</h2>$""", RegexOptions.Multiline);
+            foreach (Match section in sections)
+            {
+                var title = Regex.Replace(section.Groups[2].Value, "(<a.+>)|(</a>)", _ => "");
+                _sections.Add((section.Groups[1].Value, title));
+            }
+
+            return;
+        }
+
+        _content = "Hm, there doesn't seem to be anything here.";
+    }
+
+}
