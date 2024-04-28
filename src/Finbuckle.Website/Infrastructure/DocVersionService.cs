@@ -61,6 +61,8 @@ public class DocVersionService
 
     public IEnumerable<DocVersion> Versions { get; private set; } = Array.Empty<DocVersion>();
     public Version LatestVersion => Versions.Select(v => v.Version).Max()!;
+    public IEnumerable<DocVersion> LatestMajorVersions => Versions.GroupBy(v => v.Version.Major)
+        .Select(g => g.MaxBy(dv => dv.Version))!;
     public IEnumerable<DocVersion> LatestMinorVersions => Versions.GroupBy(v => (v.Version.Major, v.Version.Minor))
         .Select(g => g.MaxBy(dv => dv.Version))!;
 }

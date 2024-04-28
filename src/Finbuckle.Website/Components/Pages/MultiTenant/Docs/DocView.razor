@@ -10,7 +10,7 @@
 <div class="mt-4 container">
     @if (_content is null)
     {
-        <div id="docs-nav" class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <div class="spinner-grow text-secondary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
@@ -28,17 +28,26 @@
                                     v@(Version)
                                 </a>
                                 <ul class="dropdown-menu">
-                                    @foreach (var version in DocVersionService.LatestMinorVersions.Where(dv => !dv.Deprecated))
+                                    @foreach (var version in DocVersionService.LatestMajorVersions)
                                     {
-                                    <li>
-                                        <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
-                                    </li>
+                                        if (version.Deprecated)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item text-secondary" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version) (deprecated)</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </div>
                             <div class="dropdown d-xl-none">
-                                <a href="#" class="nav-link dropdown-toggle px-0" data-bs-toggle="dropdown">
-                                    @(_docVersion.Index[PageId])
+                                <a href="#" class="nav-link dropdown-toggle px-0 w-100" data-bs-toggle="dropdown">
+                                    @((MarkupString)_docVersion.Index[PageId])
                                 </a>
                                 <ul class="dropdown-menu">
                                     @foreach (var page in _docVersion.Index)
@@ -56,11 +65,20 @@
                                     v@(Version)
                                 </a>
                                 <ul class="dropdown-menu">
-                                    @foreach (var version in DocVersionService.LatestMinorVersions.Where(dv => !dv.Deprecated))
+                                    @foreach (var version in DocVersionService.LatestMajorVersions)
                                     {
-                                        <li>
-                                            <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
-                                        </li>
+                                        if (version.Deprecated)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item text-secondary" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version) (deprecated)</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </div>
@@ -68,11 +86,11 @@
                             {
                                 if (PageId == page.Key)
                                 {
-                                    <a class="nav-link active" href="@(page.Key)">@((MarkupString)page.Value)</a>
+                                    <a class="nav-link active w-100" href="@(page.Key)">@((MarkupString)page.Value)</a>
                                 }
                                 else
                                 {
-                                    <a class="nav-link" href="@(page.Key)">@((MarkupString)page.Value)</a>
+                                    <a class="nav-link w-100" href="@(page.Key)">@((MarkupString)page.Value)</a>
                                 }
                             }
                         </div>
@@ -88,7 +106,7 @@
                     <hr/>
                     @foreach (var section in _sections)
                     {
-                        <a class="nav-link link-secondary text-nowrap" href="#@(section.id)">@((MarkupString)section.title)</a>
+                        <a class="nav-link link-secondary w-100" href="#@(section.id)">@((MarkupString)section.title)</a>
                     }
                 </nav>
             </div>
@@ -109,8 +127,11 @@
     private string? _content;
     private List<(string id, string title)> _sections = [];
 
-    [Parameter] public Version Version { get; set; } = default!;
-    [Parameter] public string PageId { get; set; } = default!;
+    [Parameter]
+    public Version Version { get; set; } = default!;
+
+    [Parameter]
+    public string PageId { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,7 +148,7 @@
             var markdown = await response.Content.ReadAsStringAsync();
 
 
-            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
 
             var sections = Regex.Matches(_content, """^<h2 id="(.+)">(.+)</h2>$""", RegexOptions.Multiline);
