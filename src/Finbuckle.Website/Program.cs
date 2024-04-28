@@ -5,6 +5,7 @@ using Finbuckle.Website.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHostedService<BackgroundSyncService>();
 builder.Services.AddRazorComponents();
 
 builder.Services.AddSingleton<MailService>();
