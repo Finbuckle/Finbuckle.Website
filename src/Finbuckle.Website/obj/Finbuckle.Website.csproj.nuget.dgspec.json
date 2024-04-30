@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -45,6 +50,14 @@
             "BaGetter.Protocol": {
               "target": "Package",
               "version": "[1.2.0, )"
+            },
+            "GraphQL.Client": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "GraphQL.Client.Serializer.SystemTextJson": {
+              "target": "Package",
+              "version": "[6.0.5, )"
             },
             "Markdig": {
               "target": "Package",

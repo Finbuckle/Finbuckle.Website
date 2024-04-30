@@ -1,4 +1,8 @@
 @page "/MultiTenant"
+@using Finbuckle.Website.Infrastructure
+@using Markdig
+@inject IWebHostEnvironment WebHostEnvironment
+@inject DocVersionService DocVersionService
 
 <PageTitle>MultiTenant Home</PageTitle>
 
@@ -115,21 +119,16 @@
     </div>
 </div>
 
-<div class="parallax shadow-lg my-5"></div>
-
 <div id="getting-started" class="container">
-    <div class="row justify-content-center my-5">
+    <div class="row justify-content-center mt-5">
         <div class="col col-md-8">
-            GETTING STARTED CONTENT HERE
-            @* @Html.Raw(ViewData["GettingStartedContent"]) *@
+            @((MarkupString)_gettingStartedContent)
         </div>
     </div>
 </div>
 
-<div class="parallax shadow-lg my-5"></div>
-
 <div id="learn-more" class="container">
-    <div class="row justify-content-center my-5">
+    <div class="row justify-content-center">
         <div class="col-md-8">
             <h2>Learn More</h2>
             <p>
@@ -148,12 +147,31 @@
                 <a href="/MultiTenant/Docs">Documentation</a>
             </p>
             <p>
-                <a href="https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples">Sample Projects</a> (Sample projects for older .NET versions can be found in earlier tagged commits.)
+                <a href="https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples">Sample Projects</a>
+                <blockquote>
+                    Sample projects for older .NET versions can be found in earlier tagged release commits.
+                </blockquote>
             </p>
         </div>
     </div>
 </div>
 
 @code {
-    
+    private string _gettingStartedContent = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var version = DocVersionService.LatestVersion;
+        var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"docs/v{version}/GettingStarted.md");
+        if (fileInfo.Exists)
+        {
+            var readStream = fileInfo.CreateReadStream();
+            using var textReader = new StreamReader(readStream);
+            var markdown = await textReader.ReadToEndAsync();
+            markdown = markdown.Replace("](", "](MultiTenant/Docs/");
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            _gettingStartedContent = Markdown.ToHtml(markdown, pipeline);
+        }
+    }
+
 }

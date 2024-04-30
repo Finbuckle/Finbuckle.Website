@@ -1,4 +1,7 @@
+@attribute [StreamRendering]
 @page "/About"
+@using Finbuckle.Website.Infrastructure.GitHubSponsorService
+@inject GitHubSponsorService GitHubSponsorService
 
 <PageTitle>About</PageTitle>
 
@@ -8,11 +11,40 @@
         <p class="lead">Finbuckle was created by Andrew White in 2017 to build tools and services for the fast-growing .NET startup and open-source ecosystem.</p>
         <p>Our specialty is enabling multitenant capabilities for .NET products and services via <a asp-page="/MultiTenant/Index">Finbuckle.Multitenant</a>, a lightweight and powerful open-source multitenant middleware library for any .NET project.</p>
         <p>Whether you are a one-person shop chasing a dream or a large corporation building new services for your customers, Finbuckle can help.</p>
-        <a asp-page="/Contact" class="mt-3 btn btn-primary bg-fb-blue"><i class="far fa-envelope"></i> Contact Us</a>
+        <a href="/Contact" class="mt-3 btn btn-primary bg-fb-blue"><i class="far fa-envelope"></i> Contact Us</a>
         <form class="mt-5" action="https://finbuckle.us5.list-manage.com/subscribe/post?u=2583f8c2d682adcaac5e14197&amp;id=11c397bd2d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form">
             <label for="mce-EMAIL" class="form-label form-label">Subscribe for News and Updates</label>
             <input type="email" name="EMAIL" class="form-control form-control w-auto" id="mce-EMAIL" placeholder="Email address">
             <button type="submit" class="mt-3 btn btn-primary bg-fb-blue">Subscribe</button>
         </form>
     </div>
+
+    @* <h2>Sponsors</h2> *@
+    @* <p>Finbuckle is supported by the following sponsors:</p> *@
+    @* @if (_sponsors != null) *@
+    @* { *@
+    @*     foreach (var sponsor in _sponsors.OrderBy(s => s.Login)) *@
+    @*     { *@
+    @*         <div class="card" style="width: 10rem;"> *@
+    @*             <img src="@sponsor.AvatarUrl" class="card-img-top rounded-circle" alt="sponsor avatar"> *@
+    @*             <div class="card-body text-center"> *@
+    @*                 <p class="card-text">@sponsor.Login</p> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     } *@
+    @* } *@
+    @* else *@
+    @* { *@
+    @*     <p>Loading...</p> *@
+    @* } *@
 </div>
+
+@code {
+    private List<Sponsor> _sponsors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _sponsors = await GitHubSponsorService.GetSponsorsAsync();
+    }
+
+}

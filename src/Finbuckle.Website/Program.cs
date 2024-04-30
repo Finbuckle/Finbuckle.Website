@@ -1,12 +1,20 @@
 using System.Net.Http.Headers;
 using Finbuckle.Website.Infrastructure;
 using Finbuckle.Website.Components;
+using Finbuckle.Website.Infrastructure.GitHubSponsorService;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.SystemTextJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHostedService<BackgroundSyncService>();
 builder.Services.AddRazorComponents();
+
+builder.Services.AddSingleton<GraphQLHttpClient>(sp =>
+    new GraphQLHttpClient("https://api.github.com/graphql", new SystemTextJsonSerializer()));
+builder.Services.AddTransient<GitHubSponsorService>();
+builder.Services.Configure<GitHubSponsorServiceOptions>(builder.Configuration.GetSection("GitHubSponsorServiceOptions"));
 
 builder.Services.AddSingleton<MailService>();
 builder.Services.Configure<AmazonSesOptions>(builder.Configuration.GetSection("AmazonSesOptions"));
