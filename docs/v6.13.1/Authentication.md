@@ -162,7 +162,7 @@ builder.Services.AddMultiTenant<TenantInfo>()
         .WithPerTenantAuthentication()
 
 // WithPerTenantAuthentication, as shown above, is needed for this to work as intended
-builder.Services.ConfigurePerTenant<JwtBearerOptions, Tenantnfo>((options, tenantInfo) =>
+builder.Services.ConfigurePerTenant<JwtBearerOptions, TenantInfo>((options, tenantInfo) =>
     {
         // assume tenants are configured with an authority string to use here.
         options.Authority = tenantInfo.JwtAuthority;
@@ -186,7 +186,7 @@ builder.Services.AddMultiTenant<TenantInfo>()
         .WithPerTenantAuthentication()
 
 // WithPerTenantAuthentication, as shown above, is needed for this to work as intended
-builder.Services.ConfigurePerTenant<CookieAuthenticationOptions, Tenantnfo>((options, tenantInfo) =>
+builder.Services.ConfigurePerTenant<CookieAuthenticationOptions, TenantInfo>((options, tenantInfo) =>
     {
         o.Cookie.Name = "SignInCookie-" + tenantInfo.Id;
     }
