@@ -13,7 +13,7 @@
                 <div style="">
                     <div class="d-xl-none me-auto d-inline-block">
                         <div class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle fs-4 px-0" data-bs-toggle="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle fs-4 pt-0 px-0" data-bs-toggle="dropdown">
                                 v@(Version)
                             </a>
                             <ul class="dropdown-menu">
@@ -36,10 +36,10 @@
                         </div>
                         <div class="dropdown d-xl-none">
                             <a href="#" class="nav-link dropdown-toggle px-0 w-100" data-bs-toggle="dropdown">
-                                @((MarkupString)_docVersion.Index[PageId])
+                                @((MarkupString)(_docVersion?.Index[PageId] ?? ""))
                             </a>
                             <ul class="dropdown-menu">
-                                @foreach (var page in _docVersion.Index)
+                                @foreach (var page in _docVersion?.Index ?? new Dictionary<string, string>())
                                 {
                                     <li>
                                         <a class="dropdown-item nav-link" href="@(page.Key)">@((MarkupString)page.Value)</a>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="d-none d-xl-block">
                         <div class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle fs-4" data-bs-toggle="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle fs-4 pt-0" data-bs-toggle="dropdown">
                                 v@(Version)
                             </a>
                             <ul class="dropdown-menu">
@@ -71,7 +71,7 @@
                                 }
                             </ul>
                         </div>
-                        @foreach (var page in _docVersion.Index)
+                        @foreach (var page in _docVersion?.Index ?? new Dictionary<string, string>())
                         {
                             if (PageId == page.Key)
                             {
@@ -111,7 +111,7 @@
 </SectionContent>
 
 @code {
-    private DocVersion _docVersion = default!;
+    private DocVersion? _docVersion = default;
     private string? _content = default!;
     private List<(string id, string title)> _sections = [];
 
@@ -129,7 +129,7 @@
         if (!DocVersionService.Versions.Any())
             await DocVersionService.LoadAsync();
 
-        _docVersion = DocVersionService.Versions.Single(dv => dv.Version == Version);
+        _docVersion = DocVersionService.Versions.SingleOrDefault(dv => dv.Version == Version);
 
         var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"docs/v{Version}/{PageId}.md");
         if (fileInfo.Exists)
@@ -150,7 +150,7 @@
         }
         else
         {
-            _content = "<h1>Hm, there doesn't seem to be anything here.</h1>";
+            _content = @"<p class=""text-muted lead"">Hm, there doesn't seem to be anything here.</p>";
         }
     }
 
