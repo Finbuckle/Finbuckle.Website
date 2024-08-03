@@ -3,6 +3,7 @@
 @page "/MultiTenant/Docs/{version}/{pageId}"
 @using Finbuckle.Website.Infrastructure
 @inject DocVersionService DocVersionService
+@inject NavigationManager NavigationManager
 
 <PageTitle>MultiTenant Docs</PageTitle>
 
@@ -48,8 +49,11 @@
         }
         else if (!System.Version.TryParse(Version.Remove(0, 1), out _version))
             _version = new Version();
-        
-        PageId ??= "Introduction";
-    }
 
+        if (PageId is null)
+        {
+            // redirect to the default page
+            NavigationManager.NavigateTo($"/MultiTenant/Docs/Introduction");
+        }
+    }
 }
