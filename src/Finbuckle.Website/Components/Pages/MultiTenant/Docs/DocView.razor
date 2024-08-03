@@ -35,9 +35,12 @@
                             </ul>
                         </div>
                         <div class="dropdown d-xl-none">
-                            <a href="#" class="nav-link dropdown-toggle px-0 w-100" data-bs-toggle="dropdown">
-                                @((MarkupString)(_docVersion?.Index[PageId] ?? ""))
-                            </a>
+                            @if (_docVersion is not null && _docVersion.Index.ContainsKey(PageId))
+                            {
+                                <a href="#" class="nav-link dropdown-toggle px-0 w-100" data-bs-toggle="dropdown">
+                                    @((MarkupString)(_docVersion?.Index[PageId] ?? ""))
+                                </a>
+                            }
                             <ul class="dropdown-menu">
                                 @foreach (var page in _docVersion?.Index ?? new Dictionary<string, string>())
                                 {

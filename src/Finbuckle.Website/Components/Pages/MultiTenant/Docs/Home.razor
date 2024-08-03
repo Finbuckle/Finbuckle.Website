@@ -1,4 +1,4 @@
-@page "/MultiTenant/Docs/{pageId}"
+@page "/MultiTenant/Docs/{pageId?}"
 @page "/MultiTenant/Docs/{version:regex(^v\\d+\\.\\d+\\.\\d+$)}/{pageId}"
 @page "/MultiTenant/Docs/{version}/{pageId}"
 @using Finbuckle.Website.Infrastructure
@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse" id="subnavbarSupportedContent">
             <div class="navbar-nav">
                 <a class="nav-item nav-link" href="/MultiTenant"><i class="fas fa-home"></i> Home</a>
-                <a class="nav-item nav-link" href="/MultiTenant/Docs/GettingStarted"><i class="fas fa-book"></i> Docs</a>
+                <a class="nav-item nav-link" href="/MultiTenant/Docs"><i class="fas fa-book"></i> Docs</a>
                 <a class="nav-item nav-link" href="https://github.com/Finbuckle/Finbuckle.MultiTenant"><i class="fab fa-github"></i> GitHub</a>
                 <a class="nav-item nav-link" href="https://github.com/sponsors/Finbuckle"><i class="fas fa-heart"></i> Sponsor</a>
                 <a class="nav-item nav-link" href="https://www.nuget.org/packages/Finbuckle.MultiTenant/">
@@ -38,7 +38,7 @@
 @code {
     private Version? _version;
     [Parameter] public string? Version { get; set; }
-    [Parameter] public string PageId { get; set; } = null!;
+    [Parameter] public string? PageId { get; set; }
 
     protected override void OnInitialized()
     {
@@ -48,6 +48,8 @@
         }
         else if (!System.Version.TryParse(Version.Remove(0, 1), out _version))
             _version = new Version();
+        
+        PageId ??= "Introduction";
     }
 
 }
