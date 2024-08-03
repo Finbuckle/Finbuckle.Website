@@ -187,7 +187,7 @@ builder.Services.AddMultiTenant<TenantInfo>()
 
 // WithPerTenantAuthentication, as shown above, is needed for this to work as intended
 builder.Services.ConfigurePerTenant<CookieAuthenticationOptions, TenantInfo>((options, tenantInfo) =>
-    {
-        o.Cookie.Name = "SignInCookie-" + tenantInfo.Id;
-    }
+  {
+    options.Cookie.Name = "SignInCookie-" + tenantInfo.Id;
+  });
 ```
