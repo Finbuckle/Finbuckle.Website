@@ -31,8 +31,9 @@ builder.Services.AddSingleton<DocVersionService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
     var sp = scope.ServiceProvider;
     var docVersionService = sp.GetRequiredService<DocVersionService>();
     await docVersionService.LoadAsync();

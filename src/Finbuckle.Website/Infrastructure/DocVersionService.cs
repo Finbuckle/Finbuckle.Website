@@ -56,7 +56,7 @@ public class DocVersionService
             versions.Add(docVersion);
         }
 
-        Versions = versions.OrderByDescending(v => v.Version);
+        Versions = versions.OrderByDescending(v => v.Version).ToList();
     }
 
     public IEnumerable<DocVersion> Versions { get; private set; } = Array.Empty<DocVersion>();

@@ -18,11 +18,10 @@ public class BackgroundSyncService : BackgroundService
         try
         {
             _logger.LogInformation("Background Sync Service is starting.");
-            
-            while (await timer.WaitForNextTickAsync(stoppingToken))
+            do
             {
                 await DoSync();
-            }
+            } while (await timer.WaitForNextTickAsync(stoppingToken));
         }
         catch (OperationCanceledException)
         {
@@ -35,6 +34,6 @@ public class BackgroundSyncService : BackgroundService
     {
         _logger.LogInformation("Background Sync Service is syncing.");
 
-       await _docVersionService.LoadAsync();
+        await _docVersionService.LoadAsync();
     }
 }
