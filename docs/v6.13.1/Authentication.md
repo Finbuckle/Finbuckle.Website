@@ -142,6 +142,7 @@ work.
       }
     ]
   }
+}
 ```
 
 ## Other Authentication Options

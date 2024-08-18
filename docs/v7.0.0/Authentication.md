@@ -142,6 +142,7 @@ work.
       }
     ]
   }
+}
 ```
 
 ## Other Authentication Options
@@ -185,9 +186,12 @@ builder.Services.AddMultiTenant<TenantInfo>()
         .WithRouteStrategy()
         .WithPerTenantAuthentication()
 
-// WithPerTenantAuthentication, as shown above, is needed for this to work as intended
-builder.Services.ConfigurePerTenant<CookieAuthenticationOptions, TenantInfo>((options, tenantInfo) =>
-    {
-        o.Cookie.Name = "SignInCookie-" + tenantInfo.Id;
-    }
+// WithPerTenantAuthentication, as shown above, is needed for this to work as intended.
+// Note the default cookie authentication scheme is used for the options name per AspNetCore defauls,
+// but you can use a custom authentication scheme name to scope the options or use ConfigureAllPerTenant
+// to impact all authentication schemes.
+builder.Services.ConfigurePerTenant<CookieAuthenticationOptions, TenantInfo>(CookieAuthenticationDefaults.AuthenticationScheme, (options, tenantInfo) =>
+  {
+    options.Cookie.Name = "SignInCookie-" + tenantInfo.Id;
+  });
 ```
