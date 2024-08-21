@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using BaGetter.Protocol;
+using BaGetter.Protocol.Models;
 
 namespace Finbuckle.Website.Infrastructure;
 
@@ -24,17 +25,35 @@ public class DocVersionService
 
         var versions = new List<DocVersion>();
 
+        var metaTasks = new List<Task<PackageMetadata>>(packages.Count);
+        var metadata = new List<PackageMetadata>(packages.Count);
         foreach (var package in packages)
         {
-            var meta = await nugetClient.GetPackageMetadataAsync("Finbuckle.MultiTenant", package);
-            if(!meta.Listed!.Value) continue;
-            
-            var version = new Version(package.Version.Major, package.Version.Minor, package.Version.Build);
+            metaTasks.Add(nugetClient.GetPackageMetadataAsync("Finbuckle.MultiTenant", package));
+        }
+
+        await Task.WhenAll(metaTasks);
+        metadata.AddRange(metaTasks.Select(t => t.Result));
+
+        var getTasks = new List<(Task<HttpResponseMessage>, PackageMetadata)>(metaTasks.Count);
+
+        foreach (var data in metadata.Where(m => m.Listed ?? false))
+        {
+            var version = data.ParseVersion().Version;
 
             var indexUrl =
-                $"https://raw.githubusercontent.com/Finbuckle/Finbuckle.MultiTenant/v{version}/docs/Index.md";
-            var response = await HttpClient.GetAsync(indexUrl);
+                $"https://raw.githubusercontent.com/Finbuckle/Finbuckle.MultiTenant/v{version.ToString(3)}/docs/Index.md";
+            getTasks.Add((HttpClient.GetAsync(indexUrl), data));
+        }
+
+        await Task.WhenAll();
+
+        foreach (var (item1, taskMeta) in getTasks)
+        {
+            var response = item1.Result;
             if (!response.IsSuccessStatusCode) continue;
+
+            var version = taskMeta.ParseVersion();
 
             var indexRaw = await response.Content.ReadAsStringAsync();
             var matches = Regex.Matches(indexRaw, @"^\[(.+)\]\((.+)\)$", RegexOptions.Multiline);
@@ -43,14 +62,14 @@ public class DocVersionService
             {
                 index[match.Groups[2].Value] = match.Groups[1].Value;
             }
-            
+
             var docVersion = new DocVersion
             {
-                Version = version,
-                ReleaseDate = meta.Published,
-                TargetFrameworks = meta.DependencyGroups.Select(g => g.TargetFramework).OrderDescending()
+                Version = new Version(version.Version.Major, version.Version.Minor, version.Version.Build),
+                ReleaseDate = taskMeta.Published,
+                TargetFrameworks = taskMeta.DependencyGroups.Select(g => g.TargetFramework).OrderDescending()
                     .ToList(),
-                Deprecated = meta.Deprecation is not null,
+                Deprecated = taskMeta.Deprecation is not null,
                 Index = index
             };
             versions.Add(docVersion);
@@ -60,9 +79,8 @@ public class DocVersionService
     }
 
     public IEnumerable<DocVersion> Versions { get; private set; } = Array.Empty<DocVersion>();
-    public Version LatestVersion => Versions.Select(v => v.Version).Max()!;
+    public Version? LatestVersion => Versions.Select(v => v.Version).Max();
+
     public IEnumerable<DocVersion> LatestMajorVersions => Versions.GroupBy(v => v.Version.Major)
-        .Select(g => g.MaxBy(dv => dv.Version))!;
-    public IEnumerable<DocVersion> LatestMinorVersions => Versions.GroupBy(v => (v.Version.Major, v.Version.Minor))
         .Select(g => g.MaxBy(dv => dv.Version))!;
 }
