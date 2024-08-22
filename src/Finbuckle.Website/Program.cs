@@ -31,14 +31,6 @@ builder.Services.AddSingleton<DocVersionService>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var sp = scope.ServiceProvider;
-    var docVersionService = sp.GetRequiredService<DocVersionService>();
-    await docVersionService.LoadAsync();
-}
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

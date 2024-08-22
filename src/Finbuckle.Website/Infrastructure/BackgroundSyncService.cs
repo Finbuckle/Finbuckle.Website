@@ -35,5 +35,7 @@ public class BackgroundSyncService : BackgroundService
         _logger.LogInformation("Background Sync Service is syncing.");
 
         await _docVersionService.LoadAsync();
+        
+        _logger.LogInformation("Background Sync Service is finished syncing.");
     }
 }
