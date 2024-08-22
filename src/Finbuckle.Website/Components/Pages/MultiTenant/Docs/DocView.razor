@@ -5,113 +5,21 @@
 @inject ILogger<DocView> Logger
 @inject DocVersionService DocVersionService
 @inject IWebHostEnvironment WebHostEnvironment
+@inject NavigationManager NavigationManager
 
-<div class="mt-4 container">
-    <div class="row">
-        <div class="col-12 col-xl-2">
-            <nav class="nav flex-column">
-                <div style="">
-                    <div class="d-xl-none me-auto d-inline-block">
-                        <div class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle fs-4 pt-0 px-0" data-bs-toggle="dropdown">
-                                v@(Version)
-                            </a>
-                            <ul class="dropdown-menu">
-                                @foreach (var version in DocVersionService.LatestMajorVersions)
-                                {
-                                    if (version.Deprecated)
-                                    {
-                                        <li>
-                                            <a class="dropdown-item text-secondary" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version) (deprecated)</a>
-                                        </li>
-                                    }
-                                    else
-                                    {
-                                        <li>
-                                            <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
-                                        </li>
-                                    }
-                                }
-                            </ul>
-                        </div>
-                        <div class="dropdown d-xl-none">
-                            @if (_docVersion is not null && _docVersion.Index.ContainsKey(PageId))
-                            {
-                                <a href="#" class="nav-link dropdown-toggle px-0 w-100" data-bs-toggle="dropdown">
-                                    @((MarkupString)(_docVersion?.Index[PageId] ?? ""))
-                                </a>
-                            }
-                            <ul class="dropdown-menu">
-                                @foreach (var page in _docVersion?.Index ?? new Dictionary<string, string>())
-                                {
-                                    <li>
-                                        <a class="dropdown-item nav-link" href="@(page.Key)">@((MarkupString)page.Value)</a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="d-none d-xl-block">
-                        <div class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle fs-4 pt-0" data-bs-toggle="dropdown">
-                                v@(Version)
-                            </a>
-                            <ul class="dropdown-menu">
-                                @foreach (var version in DocVersionService.LatestMajorVersions)
-                                {
-                                    if (version.Deprecated)
-                                    {
-                                        <li>
-                                            <a class="dropdown-item text-secondary" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version) (deprecated)</a>
-                                        </li>
-                                    }
-                                    else
-                                    {
-                                        <li>
-                                            <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
-                                        </li>
-                                    }
-                                }
-                            </ul>
-                        </div>
-                        @foreach (var page in _docVersion?.Index ?? new Dictionary<string, string>())
-                        {
-                            if (PageId == page.Key)
-                            {
-                                <a class="nav-link active w-100" href="@(page.Key)">@((MarkupString)page.Value)</a>
-                            }
-                            else
-                            {
-                                <a class="nav-link w-100" href="@(page.Key)">@((MarkupString)page.Value)</a>
-                            }
-                        }
-                    </div>
-                </div>
-            </nav>
-        </div>
-        <div class="col-sm-8 col-lg-9 col-xl-8" style="scroll-behavior: smooth">
-            @((MarkupString)_content!)
-        </div>
-        <div id="docs-nav" class="col-sm-4 col-lg-3 col-xl-2 d-none d-sm-block">
-            <nav class="nav flex-column sticky-top" style="">
-                <div class="ps-3 text-secondary">On this page</div>
-                <hr/>
-                @foreach (var section in _sections)
-                {
-                    <a class="nav-link link-secondary w-100" href="#@(section.id)">@((MarkupString)section.title)</a>
-                }
-            </nav>
-        </div>
-    </div>
+<div class="col-sm-8 col-lg-9 col-xl-7" style="scroll-behavior: smooth">
+    @((MarkupString)_content!)
 </div>
-
-<SectionContent SectionName="scripts">
-    <script>
-        var scrollSpy = new bootstrap.ScrollSpy(document.body, {
-            target: '#docs-nav'
-        })
-    </script>
-</SectionContent>
+<div id="docs-nav" class="col-sm-4 col-lg-3 col-xl-3 d-none d-sm-block">
+    <nav class="nav flex-column sticky-top" style="">
+        <div class="ps-3 text-secondary">On this page</div>
+        <hr/>
+        @foreach (var section in _sections)
+        {
+            <a class="nav-link link-secondary w-100" href="@(NavigationManager.Uri)#@(section.id)">@((MarkupString)section.title)</a>
+        }
+    </nav>
+</div>
 
 @code {
     private DocVersion? _docVersion = default;
@@ -144,16 +52,16 @@
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
 
-            var sections = Regex.Matches(_content, """^<h2 id="(.+)">(.+)</h2>$""", RegexOptions.Multiline);
+            var sections = Regex.Matches(_content, """^<h2 id="(.+?)">(.+)</h2>$""", RegexOptions.Multiline);
             foreach (Match section in sections)
             {
-                var title = Regex.Replace(section.Groups[2].Value, "(<a.+>)|(</a>)", _ => "");
+                var title = Regex.Replace(section.Groups[2].Value, "(<a.+?>)|(</a>)", _ => "");
                 _sections.Add((section.Groups[1].Value, title));
             }
         }
         else
         {
-            _content = @"<p class=""text-muted lead"">Hm, there doesn't seem to be anything here.</p>";
+            _content = """<p class="text-muted lead">Hm, there doesn't seem to be anything here.</p>""";
         }
     }
 

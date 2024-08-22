@@ -100,8 +100,18 @@ h2 {
     color: var(--fb-light-blue);
 }
 
+blockquote {
+    font-style: italic;
+    border-left: 4px solid var(--fb-light-blue);
+    padding-left: 1rem;
+    width: 67%;
+    margin: 1rem auto 1rem 3rem ;
+}
+
 pre > code {
+    display: block;
     margin-left: 2rem;
+    padding-left: 2rem;
     border-left: 1px solid lightgrey;
     word-wrap: normal;
 }

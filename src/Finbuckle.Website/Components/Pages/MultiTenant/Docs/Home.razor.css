@@ -2,11 +2,3 @@
     background-image: url("/images/background3.jpg");
     background-size: cover;
 }
-
-::deep blockquote {
-    font-style: italic;
-    border-left: 4px solid var(--fb-light-blue);
-    padding-left: 1rem;
-    width: 67%;
-    margin: 1rem auto 1rem 3rem ;
-}

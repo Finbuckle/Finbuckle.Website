@@ -1,7 +1,7 @@
-@page "/MultiTenant/Docs/{pageId?}"
-@page "/MultiTenant/Docs/{version:regex(^v\\d+\\.\\d+\\.\\d+$)}/{pageId}"
-@page "/MultiTenant/Docs/{version}/{pageId}"
+@page "/MultiTenant/Docs/{PageId?}"
+@page "/MultiTenant/Docs/{Version}/{PageId}"
 @using Finbuckle.Website.Infrastructure
+@using Octokit
 @inject DocVersionService DocVersionService
 @inject NavigationManager NavigationManager
 
@@ -32,16 +32,28 @@
     </div>
 </nav>
 
-<div>
-    <DocView Version="_version" PageId="@PageId"></DocView>
+<div class="mt-4 container">
+    <div class="row">
+        <div class="col-12 col-xl-2">
+            <nav class="nav flex-column">
+                <DocNav Version="_version" PageId="@PageId"/>
+            </nav>
+        </div>
+        <DocView Version="_version" PageId="@PageId"></DocView>
+    </div>
 </div>
 
 @code {
-    private Version? _version;
-    [Parameter] public string? Version { get; set; }
-    [Parameter] public string? PageId { get; set; }
+    private Version _version = default!;
+    private string _pageId;
 
-    protected override void OnInitialized()
+    [Parameter]
+    public string? Version { get; set; }
+
+    [Parameter]
+    public string? PageId { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
         if (Version is null)
         {
@@ -50,10 +62,13 @@
         else if (!System.Version.TryParse(Version.Remove(0, 1), out _version))
             _version = new Version();
 
-        if (PageId is null)
+        _pageId = PageId ?? "Introduction";
+        
+        if (Version is null || PageId is null)
         {
             // redirect to the default page
-            NavigationManager.NavigateTo("/MultiTenant/Docs/Introduction");
+            NavigationManager.NavigateTo($"/MultiTenant/Docs/v{_version}/{_pageId}");
         }
     }
+
 }

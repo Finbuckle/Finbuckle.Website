@@ -1,0 +1,94 @@
+@using Finbuckle.Website.Infrastructure
+@inject DocVersionService DocVersionService
+
+<div class="d-xl-none me-auto d-inline-block">
+    <div class="dropdown">
+        <a href="#" class="nav-link dropdown-toggle fs-4 pt-0 px-0" data-bs-toggle="dropdown">
+            v@(_docVersion.Version)
+        </a>
+        <ul class="dropdown-menu">
+            @foreach (var version in DocVersionService.LatestMajorVersions)
+            {
+            if (version.Deprecated)
+            {
+            <li>
+                <a class="dropdown-item text-secondary" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version) (deprecated)</a>
+            </li>
+            }
+            else
+            {
+            <li>
+                <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
+            </li>
+            }
+            }
+        </ul>
+    </div>
+    <div class="dropdown d-xl-none">
+        @if (_docVersion.Index.TryGetValue(PageId, out var value))
+        {
+        <a href="#" class="nav-link dropdown-toggle px-0 w-100" data-bs-toggle="dropdown">
+            @((MarkupString)(value ?? ""))
+        </a>
+        }
+        <ul class="dropdown-menu">
+            @foreach (var page in _docVersion.Index)
+            {
+            <li>
+                <a class="dropdown-item nav-link" href="@(page.Key)">@((MarkupString)page.Value)</a>
+            </li>
+            }
+        </ul>
+    </div>
+</div>
+<div class="d-none d-xl-block">
+    <div class="dropdown">
+        <a href="#" class="nav-link dropdown-toggle fs-4 pt-0" data-bs-toggle="dropdown">
+            v@(_docVersion.Version)
+        </a>
+        <ul class="dropdown-menu">
+            @foreach (var version in DocVersionService.LatestMajorVersions)
+            {
+            if (version.Deprecated)
+            {
+            <li>
+                <a class="dropdown-item text-secondary" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version) (deprecated)</a>
+            </li>
+            }
+            else
+            {
+            <li>
+                <a class="dropdown-item" href="@($"/MultiTenant/Docs/v{version.Version}/{PageId}")">v@(version.Version)</a>
+            </li>
+            }
+            }
+        </ul>
+    </div>
+    @foreach (var page in _docVersion.Index)
+    {
+    if (PageId == page.Key)
+    {
+    <a class="nav-link active w-100" href="MultiTenant/Docs/@(page.Key)">@((MarkupString)page.Value)</a>
+    }
+    else
+    {
+    <a class="nav-link w-100" href="MultiTenant/Docs/@(page.Key)">@((MarkupString)page.Value)</a>
+    }
+    }
+</div>
+
+@code {
+    private DocVersion _docVersion = default!;
+
+    [Parameter]
+    public string PageId { get; set; } = default!;
+
+    [Parameter]
+    public Version Version { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _docVersion = DocVersionService.Versions.Single(dv => dv.Version == Version);
+    }
+
+}
