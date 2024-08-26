@@ -1,7 +1,6 @@
 @using System.Text.RegularExpressions
 @using Finbuckle.Website.Infrastructure
 @using Markdig
-@using Microsoft.AspNetCore.Components.Sections
 @inject ILogger<DocView> Logger
 @inject DocVersionService DocVersionService
 @inject IWebHostEnvironment WebHostEnvironment
@@ -48,7 +47,13 @@
             var readStream = fileInfo.CreateReadStream();
             using var textReader = new StreamReader(readStream);
             var markdown = await textReader.ReadToEndAsync();
-            markdown = markdown.Replace("](", "](MultiTenant/Docs/");
+            //var links = Regex.Matches(markdown, @"\[.+?\](\((?!http).+?)\)");
+            markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?).+?)\)", m => $"[{m.Groups[1]}](MultiTenant/Docs/{m.Groups[2]})");
+            // foreach (Match link in links)
+            // {
+            //     markdown = markdown.Replace(link.Groups[1].Value, $"MultiTenant/Docs/{link.Groups[1]}");
+            // }
+            
             
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
