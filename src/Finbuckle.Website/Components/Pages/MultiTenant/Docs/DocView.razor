@@ -48,7 +48,8 @@
             var readStream = fileInfo.CreateReadStream();
             using var textReader = new StreamReader(readStream);
             var markdown = await textReader.ReadToEndAsync();
-
+            markdown = markdown.Replace("](", "](MultiTenant/Docs/");
+            
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
 
