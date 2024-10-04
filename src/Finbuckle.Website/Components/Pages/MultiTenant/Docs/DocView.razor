@@ -47,13 +47,8 @@
             var readStream = fileInfo.CreateReadStream();
             using var textReader = new StreamReader(readStream);
             var markdown = await textReader.ReadToEndAsync();
-            //var links = Regex.Matches(markdown, @"\[.+?\](\((?!http).+?)\)");
-            markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?).+?)\)", m => $"[{m.Groups[1]}](MultiTenant/Docs/{m.Groups[2]})");
-            // foreach (Match link in links)
-            // {
-            //     markdown = markdown.Replace(link.Groups[1].Value, $"MultiTenant/Docs/{link.Groups[1]}");
-            // }
             
+            markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?).+?)\)", m => $"[{m.Groups[1]}](MultiTenant/Docs/{m.Groups[2]})");
             
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
