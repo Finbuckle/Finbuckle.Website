@@ -22,7 +22,7 @@
 ### BREAKING CHANGES
 
 * This commit brings the release into alignment with the new version policy. See #887 for details.
-* Included strategies for ASP.NET Core would throw an exception if the passed context was not an  type. Now they will return null indicating no identifier was found.
+* Included strategies for ASP.NET Core would throw an exception if the passed context was not an `HttpContext` type. Now they will return null indicating no identifier was found.
 
 
 

@@ -1,0 +1,5 @@
+﻿<Solution>
+  <Folder Name="/src/">
+    <Project Path="src\Finbuckle.Website\Finbuckle.Website.csproj" Type="Classic C#" />
+  </Folder>
+</Solution>
