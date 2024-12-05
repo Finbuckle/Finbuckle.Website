@@ -50,7 +50,7 @@
             var markdown = await textReader.ReadToEndAsync();
             
             // prepend desired path to local links since the base href is set to "/"
-            var path = $"MultiTenant/v{Version}/Docs";
+            var path = $"MultiTenant/Docs/v{Version}/";
             markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?|#).+?)\)", m => $"[{m.Groups[1]}]({path}/{m.Groups[2]})");
             
             // Prepend desired path local anchors
