@@ -1,6 +1,7 @@
 @using System.Text.RegularExpressions
 @using Finbuckle.Website.Infrastructure
 @using Markdig
+@using Microsoft.AspNetCore.Http.Extensions
 @inject ILogger<DocView> Logger
 @inject DocVersionService DocVersionService
 @inject IWebHostEnvironment WebHostEnvironment
@@ -48,10 +49,16 @@
             using var textReader = new StreamReader(readStream);
             var markdown = await textReader.ReadToEndAsync();
             
-            markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?).+?)\)", m => $"[{m.Groups[1]}](MultiTenant/Docs/{m.Groups[2]})");
+            // prepend desired path to local links since the base href is set to "/"
+            var path = "MultiTenant/Docs";
+            markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?|#).+?)\)", m => $"[{m.Groups[1]}]({path}/{m.Groups[2]})");
+            
+            // Prepend desired path local anchors
+            markdown = Regex.Replace(markdown, @"\[(.+?)\]\((#.+?)\)", m => $"[{m.Groups[1]}]({path}/{PageId}{m.Groups[2]})");
             
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
+            
 
             var sections = Regex.Matches(_content, """^<h2 id="(.+?)">(.+)</h2>$""", RegexOptions.Multiline);
             foreach (Match section in sections)
