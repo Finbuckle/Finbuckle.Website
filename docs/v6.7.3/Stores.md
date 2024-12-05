@@ -78,7 +78,7 @@ Currently `InMemoryStore`, `ConfigurationStore`, and `EFCoreStore` implement `Ge
 Uses a `ConcurrentDictionary<string, TenantInfo>` as the underlying store.
 
 Configure by calling `WithInMemoryStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the
-app's `Startup` class.y By default the store is empty and the tenant identifier matching is case insensitive. An
+app's `Startup` class.y By default, the store is empty and the tenant identifier matching is case-insensitive. An
 overload of `WithInMemoryStore` accepts an `Action<InMemoryStoreOptions>` delegate to configure the store further:
 
 ```cs
@@ -125,7 +125,7 @@ When possible prefer a case-insensitive in-memory store.
 
 Uses an
 app's [configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1) as
-the underlying store. Most of the sample projects use this store for simplicity. This store is case insensitive when
+the underlying store. Most of the sample projects use this store for simplicity. This store is case-insensitive when
 retrieving tenant information by tenant identifier.
 
 This store is read-only and calls to `TryAddAsync`, `TryUpdateAsync`, and `TryRemoveAsync` will throw
@@ -133,7 +133,7 @@ a `NotImplementedException`. However, if the app is configured to reload its con
 e.g. `appsettings.json` is updated, then the multitenant store will reflect the change.
 
 Configure by calling `WithConfigurationStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the
-app's `Startup` class. By default it will use the root configuration object and search for a section named "Finbuckle:
+app's `Startup` class. By default, it will use the root configuration object and search for a section named "Finbuckle:
 MultiTenant:Stores:ConfigurationStore". An overload of `WithConfigurationStore` allows for a different base
 configuration object or section name if needed.
 
@@ -238,7 +238,7 @@ store.TryUpdate(newTenant);
 store.TryRemove(newTenant.Identifier);
 ```
 
-In addition the underlying db context can be used to modify data in the same way Entity Framework Core works with any db
+In addition, the underlying db context can be used to modify data in the same way Entity Framework Core works with any db
 context.
 
 ## Http Remote Store
@@ -248,13 +248,13 @@ context.
 Sends the tenant identifier, provided by the multitenant strategy, to an http(s) endpoint to get a `TenantInfo` object
 in return.
 The [Http Remote Store Sample](https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples/ASP.NET%20Core%203/HttpRemoteStoreSample)
-projects demonstrate this store. This store is usually case insensitive when retrieving tenant information by tenant
+projects demonstrate this store. This store is usually case-insensitive when retrieving tenant information by tenant
 identifier, but the remote server might be more restrictive.
 
 Note, make sure the tenant info type will support basic JSON serialization and deserialization via `System.Text.Json`.
 This strategy will attempt to deserialize the tenant using the [System.Text.Json web defaults](https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-configure-options?pivots=dotnet-6-0#web-defaults-for-jsonserializeroptions).
 
-For a successfully request, the store expects a 200 response code and a json body with properties `Id`, `Identifier`
+For a successful request, the store expects a 200 response code and a json body with properties `Id`, `Identifier`
 , `Name`, and `ConnectionString` and other properties which will be mapped into a `TenantInfo` object with the type
 passed to `AddMultiTenant<T>`.
 
@@ -338,7 +338,7 @@ cache entries synced.
 This store does not implement `GetAllAsync`.
 
 Configure by calling `WithDistributedCacheStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the
-app's `Startup` class. By default entries do not expire, but a `TimeSpan` can be passed to be used as a sliding
+app's `Startup` class. By default, entries do not expire, but a `TimeSpan` can be passed to be used as a sliding
 expiration for all entries.
 
 Note that the store does not interact with any other stores by default.

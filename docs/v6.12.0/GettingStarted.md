@@ -39,7 +39,7 @@ public void Configure(IApplicationBuilder app)
 }
 ```
 
-That's all that is needed to get going. Let's breakdown each line:
+That's all that is needed to get going. Let's break down each line:
 
 `services.AddMultiTenant<TenantInfo>()`
 

@@ -84,7 +84,7 @@ public class BloggingDbContext : MultiTenantDbContext
 ```
 
 Database context classes derived from `MultiTenantDbContext` will automatically
-respect the `[MultiTenant]` attribute. Otherwise a database context class can
+respect the `[MultiTenant]` attribute. Otherwise, a database context class can
 be configured to respect the attribute by calling `ConfigureMultiTenant` in the
 `OnModelCreating` method.
 
@@ -114,7 +114,7 @@ it can be used for types which do not have the attribute, e.g. from another asse
 `IsMultiTenant()` returns an `MultiTenantEntityTypeBuilder` instance which enables further multitenant configuration of the entity type via `AdjustKey`,`AdjustIndex`, `AdjustIndexes`, and `AdjustUniqueIndexes`. See [Keys and Indexes] for more details.
 
 ## Existing Query Filters
-`IsMultiTenant` and the `[MultiTenant]` attribute use a query filter for data isolation and will automatically merge its query filter with an existing query filter is one is present. For that reason, if the type to be multitenant has a existing query filter, `IsMultiTenant` and `ConfigureMultiTenant` should be called *after* the existing query filter is configured: 
+`IsMultiTenant` and the `[MultiTenant]` attribute use a query filter for data isolation and will automatically merge its query filter with an existing query filter is one is present. For that reason, if the type to be multitenant has an existing query filter, `IsMultiTenant` and `ConfigureMultiTenant` should be called *after* the existing query filter is configured: 
 
 ```csharp
 protected override void OnModelCreating(ModelBuilder builder)
@@ -218,7 +218,7 @@ public class BloggingDbContext : MultiTenantDbContext
 }
 ```
 
-If relying on the `ConnectionString` property of the `TenantInfo` then the db context will need to configures itself in its `OnConfiguring` method using its inherited `ConnectionString` property:
+If relying on the `ConnectionString` property of the `TenantInfo` then the db context will need to configure itself in its `OnConfiguring` method using its inherited `ConnectionString` property:
 
 ```csharp
 public class BloggingDbContext : MultiTenantDbContext
@@ -261,7 +261,7 @@ connection string property.
 
 ## Design Time Instantiation
 Given that a multitenant db context usually requires a tenant to function, design time instantiation can be challenging.
-By default for things like migrations and command line tools Entity Framework core attempts to create an instance of the context
+By default, for things like migrations and command line tools Entity Framework core attempts to create an instance of the context
 using dependency injection, however usually no valid tenant exists in these cases and DI fails.
 For this reason it is recommended to use a [design time factory](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dbcontext-creation#from-a-design-time-factory) wherein a dummy `ITenantInfo` is constructed  with the desired connection string and passed to the db context constructor.
 
@@ -349,9 +349,9 @@ protected override void OnModelCreating(ModelBuilder builder)
 
 ## Tenant Mismatch Mode
 
-Normally Finbuckle.MultiTenant will automatically coordinate the `TenantId` property of each entity. However in certain situations the `TenantId` can be manually set.
+Normally Finbuckle.MultiTenant will automatically coordinate the `TenantId` property of each entity. However, in certain situations the `TenantId` can be manually set.
 
-By default attempting to add or update an entity with a different `TenantId` property throws a `MultiTenantException` during a call to `SaveChanges` or `SaveChangesAsync`. This behavior can be changed by setting the `TenantMismatchMode` property on the database context:
+By default, attempting to add or update an entity with a different `TenantId` property throws a `MultiTenantException` during a call to `SaveChanges` or `SaveChangesAsync`. This behavior can be changed by setting the `TenantMismatchMode` property on the database context:
 
 * TenantMismatchMode.Throw - A `MultiTenantException` is thrown (default).
 * TenantMismatchMode.Ignore - The entity is added or updated without modifying its `TenantId`.
@@ -359,7 +359,7 @@ By default attempting to add or update an entity with a different `TenantId` pro
 
 ## Tenant Not Set Mode
 
-If the `TenantId` on an entity is manually set to null the default behavior is to overwrite the `TenantId` for added entities or to throw a `MultiTenantException` for updated entities. This occurs during a call to `SaveChanges` or `SaveChangesAsync`. This behavior can be changed by setting the `TenantNotSetMode' property on the database context:
+If the `TenantId` on an entity is manually set to null the default behavior is to overwrite the `TenantId` for added entities or to throw a `MultiTenantException` for updated entities. This occurs during a call to `SaveChanges` or `SaveChangesAsync`. This behavior can be changed by setting the `TenantNotSetMode` property on the database context:
 
 * TenantNotSetMode.Throw - For added entities the null `TenantId` will be overwritten to match the database context's current `TenantInfo`. For updated entities a `MultiTenantException` is thrown (default).
 * TenantNotSetMode.Overwrite - The entity's `TenantId` is overwritten to match the database context's current `TenantInfo`.

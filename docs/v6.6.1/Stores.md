@@ -62,7 +62,7 @@ Currently `InMemoryStore`, `ConfigurationStore`, and `EFCoreStore` implement `Ge
 
 Uses a `ConcurrentDictionary<string, TenantInfo>` as the underlying store.
 
-Configure by calling `WithInMemoryStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the app's `Startup` class.y By default the store is empty and the tenant identifier matching is case insensitive. An overload of `WithInMemoryStore` accepts an `Action<InMemoryStoreOptions>` delegate to configure the store further:
+Configure by calling `WithInMemoryStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the app's `Startup` class.y By default, the store is empty and the tenant identifier matching is case-insensitive. An overload of `WithInMemoryStore` accepts an `Action<InMemoryStoreOptions>` delegate to configure the store further:
 
 ```cs
 // Set up a case-insensitive in-memory store.
@@ -104,11 +104,11 @@ When possible prefer a case-insensitive in-memory store.
 ## Configuration Store
 > NuGet package: Finbuckle.MultiTenant
 
-Uses an app's [configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1) as the underlying store. Most of the sample projects use this store for simplicity. This store is case insensitive when retrieving tenant information by tenant identifier.
+Uses an app's [configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1) as the underlying store. Most of the sample projects use this store for simplicity. This store is case-insensitive when retrieving tenant information by tenant identifier.
 
 This store is read-only and calls to `TryAddAsync`, `TryUpdateAsync`, and `TryRemoveAsync` will throw a `NotImplementedException`. However, if the app is configured to reload its configuration if the source changes, e.g. `appsettings.json` is updated, then the multitenant store will reflect the change.
 
-Configure by calling `WithConfigurationStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the app's `Startup` class. By default it will use the root configuration object and search for a section named "Finbuckle:MultiTenant:Stores:ConfigurationStore". An overload of `WithConfigurationStore` allows for a different base configuration object or section name if needed.
+Configure by calling `WithConfigurationStore` after `AddMultiTenant<T>` in the `ConfigureServices` method of the app's `Startup` class. By default, it will use the root configuration object and search for a section named "Finbuckle:MultiTenant:Stores:ConfigurationStore". An overload of `WithConfigurationStore` allows for a different base configuration object or section name if needed.
 
 ```cs
 // Register to use the default root configuration and section name.
@@ -201,18 +201,18 @@ store.TryUpdate(newTenant);
 store.TryRemove(newTenant.Identifier);
 ```
 
-In addition the underlying db context can be used to modify data in the same way
+In addition, the underlying db context can be used to modify data in the same way
 Entity Framework Core works with any db context.
 
 ## Http Remote Store
 > NuGet package: Finbuckle.MultiTenant
 
-Sends the tenant identifier, provided by the multitenant strategy, to an http(s) endpoint to get a `TenantInfo` object in return. The [Http Remote Store Sample](https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples/ASP.NET%20Core%203/HttpRemoteStoreSample) projects demonstrate this store. This store is usually case insensitive when retrieving tenant information by tenant identifier, but the remote server might be more restrictive.
+Sends the tenant identifier, provided by the multitenant strategy, to an http(s) endpoint to get a `TenantInfo` object in return. The [Http Remote Store Sample](https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples/ASP.NET%20Core%203/HttpRemoteStoreSample) projects demonstrate this store. This store is usually case-insensitive when retrieving tenant information by tenant identifier, but the remote server might be more restrictive.
 
 Note, make sure the tenant info type will support basic JSON serialization and
 deserialization.
 
-For a successfully request, the store expects a 200 response code and a json body with properties `Id`, `Identifier`, `Name`, and `ConnectionString` and other properties which will be mapped into a `TenantInfo` object with the type passed to `AddMultiTenant<T>`.
+For a successful request, the store expects a 200 response code and a json body with properties `Id`, `Identifier`, `Name`, and `ConnectionString` and other properties which will be mapped into a `TenantInfo` object with the type passed to `AddMultiTenant<T>`.
 
 Any non-200 response code results in a null `TenantInfo`.
 
@@ -283,7 +283,7 @@ cache entries synced.
 This store does not implement `GetAllAsync`.
 
 Configure by calling `WithDistributedCacheStore` after `AddMultiTenant<T>` in
-the `ConfigureServices` method of the app's `Startup` class. By default entries
+the `ConfigureServices` method of the app's `Startup` class. By default, entries
 do not expire, but a `TimeSpan` can be passed to be used as a sliding expiration
 for all entries.
 

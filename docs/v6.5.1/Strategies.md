@@ -93,10 +93,10 @@ services.AddMultiTenant<TenantInfo>()
 ## Claim Strategy
 > NuGet package: Finbuckle.MultiTenant.AspNetCore
 
-Uses a claim to determine the tenant identifier. By default the first claim
+Uses a claim to determine the tenant identifier. By default, the first claim
 value with type `__tenant__` is used, but a custom type name can also be used.
 This strategy uses the default authentication scheme, which is usually cookie
-based, but does not go so far as to set `HttpContext.User`. Thus the ASP.NET
+based, but does not go so far as to set `HttpContext.User`. Thus,the ASP.NET
 Core authentication middleware should still be used as normal, and in most use
 cases should come after `UseMultiTenant` when using `ClaimsStrategy`. Due to how
 the authentication middleware is implemented there is practically no performance
@@ -187,7 +187,7 @@ public class Startup
 ## Host Strategy
 > NuGet package: Finbuckle.MultiTenant.AspNetCore
 
-Uses request's host value to determine the tenant. By default the first host segment is used. For example, a request to "https://initech.example.com/abc123" would use "initech" as the identifier when resolving the tenant. This strategy can be difficult to use in a development environment. Make sure the development system is configured properly to allow subdomains on `localhost`. This strategy is configured as a singleton.
+Uses request's host value to determine the tenant. By default, the first host segment is used. For example, a request to "https://initech.example.com/abc123" would use "initech" as the identifier when resolving the tenant. This strategy can be difficult to use in a development environment. Make sure the development system is configured properly to allow subdomains on `localhost`. This strategy is configured as a singleton.
 
 The host strategy uses a template string which defines how the strategy will find the tenant identifier. The pattern specifies the location for the tenant identifier using "\_\_tenant\_\_" and can contain other valid domain characters. It can also use '?' and '\*' characters to represent one or "zero or more" segments. For example:
   - `__tenant__.*` is the default if no pattern is provided and selects the first (or only) domain segment as the tenant identifier.
@@ -211,7 +211,7 @@ services.AddMultiTenant<TenantInfo>()
 ## Header Strategy
 > NuGet package: Finbuckle.MultiTenant.AspNetCore
 
-Uses an HTTP request header to determine the tenant identifier. By default the header
+Uses an HTTP request header to determine the tenant identifier. By default, the header
 with key `__tenant__` is used, but a custom key can also be used.
 
 Configure by calling `WithHeaderStrategy` after `AddMultiTenant<T>` in the

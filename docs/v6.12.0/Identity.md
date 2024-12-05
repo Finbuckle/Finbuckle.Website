@@ -4,7 +4,7 @@
 
 Finbuckle.MultiTenant has limited support for data isolation with ASP.NET Core Identity when Entity Framework Core is used as the backing store. It works similarly to [Data Isolation with Entity Framework Core](EFCore) except Identity calls into the database instead of your own code.
 
-See the Identity data isolation sample projects in the [GitHub repository](https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples) for examples on how to use Finbuckle.MultiTenant with ASP.NET Core Identity. These samples illustrates how to isolate the tenant Identity data and integrate the Identity UI to work with a route multitenant strategy.
+See the Identity data isolation sample projects in the [GitHub repository](https://github.com/Finbuckle/Finbuckle.MultiTenant/tree/master/samples) for examples on how to use Finbuckle.MultiTenant with ASP.NET Core Identity. These samples illustrate how to isolate the tenant Identity data and integrate the Identity UI to work with a route multitenant strategy.
 
 ## Configuration
 Configuring an Identity db context to be multitenant is identical to that of a regular db context as described in [Data Isolation With Entity Framework Core](EFCore) with a few extra specifics to keep in mind.
@@ -45,7 +45,7 @@ The [ASP.NET Core Identity data model](https://docs.microsoft.com/en-us/aspnet/c
 
 Default entity types exist such as the `IdentityUser`, `IdentityRole`, and `IdentityUserClaim`, which are commonly used as the generic parameters. The default for `TKey` is `string`. Apps can provide their own entity types for any of these by using alternative forms of the database context which take varying number of generic type parameters. Simple use-cases derive from `IdentityDbContext` types which require only a few generic parameters and plug in the default entity types for the rest.
 
-Deriving an Identity database context from `MultiTenantIdentityDbContext` will use all of the default entity types and `string` for `TKey`. All entity types will be configured as multitenant.
+Deriving an Identity database context from `MultiTenantIdentityDbContext` will use all the default entity types and `string` for `TKey`. All entity types will be configured as multitenant.
 
 Deriving from `MultiTenantIdentityDbContext<TUser>` will use the provided parameter for `TUser` and the defaults for the rest. `TUser` will not be configured as multitenant by default, and it is up to the programmer to do so as described above. All other entity types will be configured as multitenant.
 
