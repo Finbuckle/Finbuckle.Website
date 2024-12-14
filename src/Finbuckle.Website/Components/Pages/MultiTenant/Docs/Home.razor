@@ -54,6 +54,9 @@
     [Parameter]
     public string? PageId { get; set; }
 
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
     protected override void OnInitialized()
     {
         if (Version is null)
@@ -68,7 +71,7 @@
         if (Version is null || PageId is null)
         {
             // redirect to the default page
-            NavigationManager.NavigateTo($"/MultiTenant/Docs/v{_version}/{_pageId}");
+            NavigationManager.NavigateTo($"https://{HttpContext.Request.Host}/MultiTenant/Docs/v{_version}/{_pageId}");
         }
     }
 
