@@ -38,7 +38,7 @@ public class DocVersionService
 
         foreach (var docFolder in docFolders)
         {
-            var indexStream = fileProvider.GetFileInfo($"docs/{docFolder}/index.md").CreateReadStream();
+            var indexStream = fileProvider.GetFileInfo($"docs/{docFolder}/Index.md").CreateReadStream();
             using var reader = new StreamReader(indexStream);
             var indexRaw = await reader.ReadToEndAsync();
             
