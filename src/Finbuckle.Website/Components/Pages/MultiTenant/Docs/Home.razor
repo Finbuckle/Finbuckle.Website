@@ -54,7 +54,7 @@
     [Parameter]
     public string? PageId { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         if (Version is null)
         {

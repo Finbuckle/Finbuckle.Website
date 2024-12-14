@@ -1,7 +1,6 @@
 @using System.Text.RegularExpressions
 @using Finbuckle.Website.Infrastructure
 @using Markdig
-@using Microsoft.AspNetCore.Http.Extensions
 @inject ILogger<DocView> Logger
 @inject DocVersionService DocVersionService
 @inject IWebHostEnvironment WebHostEnvironment
@@ -10,19 +9,22 @@
 <div class="col-sm-8 col-lg-9 col-xl-7" style="scroll-behavior: smooth">
     @((MarkupString)_content!)
 </div>
-<div id="docs-nav" class="col-sm-4 col-lg-3 col-xl-3 d-none d-sm-block">
-    <nav class="nav flex-column sticky-top" style="">
-        <div class="ps-3 text-secondary">On this page</div>
-        <hr/>
-        @foreach (var section in _sections)
-        {
-            <a class="nav-link link-secondary w-100" href="@(NavigationManager.Uri)#@(section.id)">@((MarkupString)section.title)</a>
-        }
-    </nav>
-</div>
+
+@if (_sections.Any())
+{
+    <div id="docs-nav" class="col-sm-4 col-lg-3 col-xl-3 d-none d-sm-block">
+        <nav class="nav flex-column sticky-top" style="">
+            <div class="ps-3 text-secondary">On this page</div>
+            <hr/>
+            @foreach (var section in _sections)
+            {
+                <a class="nav-link link-secondary w-100" href="@(NavigationManager.Uri)#@(section.id)">@((MarkupString)section.title)</a>
+            }
+        </nav>
+    </div>
+}
 
 @code {
-    private DocVersion? _docVersion = default;
     private string? _content = default!;
     private List<(string id, string title)> _sections = [];
 
@@ -37,11 +39,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (!DocVersionService.Versions.Any())
-            await DocVersionService.LoadAsync();
-
-        _docVersion = DocVersionService.Versions.SingleOrDefault(dv => dv.Version == Version);
-
         var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"docs/v{Version}/{PageId}.md");
         if (fileInfo.Exists)
         {
@@ -69,7 +66,7 @@
         }
         else
         {
-            _content = """<p class="text-muted lead">Hm, there doesn't seem to be anything here.</p>""";
+            _content = """<p class="text-muted lead">Hm, there doesn't seem to be anything here. Were you looking for the <a href="MultiTenant/Docs">docs</a>?</p>""";
         }
     }
 

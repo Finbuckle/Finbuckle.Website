@@ -11,25 +11,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHostedService<BackgroundSyncService>();
 builder.Services.AddRazorComponents();
 
-builder.Services.AddSingleton<GraphQLHttpClient>(sp =>
-    new GraphQLHttpClient("https://api.github.com/graphql", new SystemTextJsonSerializer()));
-builder.Services.AddTransient<GitHubSponsorService>();
-builder.Services.Configure<GitHubSponsorServiceOptions>(builder.Configuration.GetSection("GitHubSponsorServiceOptions"));
+// builder.Services.AddSingleton<GraphQLHttpClient>(sp =>
+//     new GraphQLHttpClient("https://api.github.com/graphql", new SystemTextJsonSerializer()));
+// builder.Services.AddTransient<GitHubSponsorService>();
+// builder.Services.Configure<GitHubSponsorServiceOptions>(builder.Configuration.GetSection("GitHubSponsorServiceOptions"));
 
 builder.Services.AddSingleton<MailService>();
 builder.Services.Configure<AmazonSesOptions>(builder.Configuration.GetSection("AmazonSesOptions"));
 
 builder.Services.AddSingleton<DocVersionService>();
 
-builder.Services.AddHttpClient("/MultiTenant/Docs", client =>
-{
-    client.BaseAddress = new Uri("https://raw.githubusercontent.com/Finbuckle/Finbuckle.MultiTenant/");
-    client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Finbuckle.Website", null));
-});
-
-builder.Services.AddSingleton<DocVersionService>();
-
 var app = builder.Build();
+
+await app.Services.GetService<DocVersionService>()!.LoadAsync();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

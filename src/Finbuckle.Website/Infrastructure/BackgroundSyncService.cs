@@ -3,12 +3,10 @@ namespace Finbuckle.Website.Infrastructure;
 public class BackgroundSyncService : BackgroundService
 {
     private readonly ILogger<BackgroundSyncService> _logger;
-    private readonly DocVersionService _docVersionService;
 
     public BackgroundSyncService(ILogger<BackgroundSyncService> logger, DocVersionService docVersionService)
     {
         _logger = logger;
-        _docVersionService = docVersionService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -33,8 +31,6 @@ public class BackgroundSyncService : BackgroundService
     private async Task DoSync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Background Sync Service is syncing.");
-
-        await _docVersionService.LoadAsync();
         
         _logger.LogInformation("Background Sync Service is finished syncing.");
     }

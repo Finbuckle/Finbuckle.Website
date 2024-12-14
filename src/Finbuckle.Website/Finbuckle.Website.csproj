@@ -16,6 +16,10 @@
         <PackageReference Include="Octokit" Version="11.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Docs\" />
+    </ItemGroup>
+
     <Import Project="include.proj" />
     
 </Project>
