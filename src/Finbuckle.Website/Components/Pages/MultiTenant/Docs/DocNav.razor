@@ -6,7 +6,7 @@
         <a href="#" class="nav-link dropdown-toggle fs-4 pt-0 px-0" data-bs-toggle="dropdown">
             @if (_docVersion is not null)
             {
-                <text>v(@_docVersion.Version)</text>
+                <text>@(_docVersion.Version)</text>
             }
             else
             {
@@ -51,7 +51,7 @@
         <a href="#" class="nav-link dropdown-toggle fs-4 pt-0" data-bs-toggle="dropdown">
             @if (_docVersion is not null)
             {
-                <text>v(@_docVersion.Version)</text>
+                <text>v@(_docVersion.Version)</text>
             }
             else
             {
