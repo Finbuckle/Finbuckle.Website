@@ -1,7 +1,7 @@
 @attribute [StreamRendering]
 @page "/About"
-@using Finbuckle.Website.Infrastructure.GitHubSponsorService
-@inject GitHubSponsorService GitHubSponsorService
+@* @using Finbuckle.Website.Infrastructure.GitHubSponsorService *@
+@* @inject GitHubSponsorService GitHubSponsorService *@
 
 <PageTitle>About</PageTitle>
 
@@ -40,7 +40,7 @@
 </div>
 
 @code {
-    private List<Sponsor> _sponsors;
+    // private List<Sponsor> _sponsors;
 
     protected override async Task OnInitializedAsync()
     {
