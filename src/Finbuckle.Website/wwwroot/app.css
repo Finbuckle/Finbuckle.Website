@@ -58,10 +58,9 @@ h2 {
 }
 
 .bg-fb-squares-light {
-    background-image: url("/images/squares-light.svg");
     /* background by SVGBackgrounds.com */
     background-size: cover;
-    background-position: center;
+    background: #000000 url("/images/squares-light.svg") center;
     min-height: 500px;
 }
 
@@ -73,11 +72,6 @@ h2 {
 
 .bg-fb-light {
     min-height: 500px;
-}
-
-.big-image {
-    /*max-height: 250px;*/
-    /*overflow: hidden;*/
 }
 
 .big-image img{

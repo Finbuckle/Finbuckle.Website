@@ -17,7 +17,7 @@
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development"
         },
-        "workingDirectory": "bin/debug/net8.0"
+        "workingDirectory": "bin/debug/net9.0"
       },
       "IIS Express": {
         "commandName": "IISExpress",
