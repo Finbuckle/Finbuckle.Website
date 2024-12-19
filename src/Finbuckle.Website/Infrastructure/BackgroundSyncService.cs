@@ -11,11 +11,11 @@ public class BackgroundSyncService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using PeriodicTimer timer = new(TimeSpan.FromMinutes(10));
+        using PeriodicTimer timer = new(TimeSpan.FromMinutes(15));
 
         try
         {
-            _logger.LogInformation("Background Sync Service is starting.");
+            _logger.LogDebug("Background Sync Service is starting.");
             do
             {
                 await DoSync(stoppingToken);
@@ -23,7 +23,7 @@ public class BackgroundSyncService : BackgroundService
         }
         catch (OperationCanceledException)
         {
-            _logger.LogInformation("Background Sync Service is stopping.");
+            _logger.LogDebug("Background Sync Service is stopping.");
         }
     }
 
