@@ -7,7 +7,21 @@
 @inject NavigationManager NavigationManager
 
 <div class="col-sm-8 col-lg-9 col-xl-7" style="scroll-behavior: smooth">
-    @((MarkupString)_content!)
+    @if (_content is null)
+    {
+        <p class="text-muted lead">Hm, there doesn't seem to be anything here. Were you looking for the <a
+                href="MultiTenant/Docs">docs</a>?</p>
+    }
+    else
+    {
+        if (HttpContext.Request.Query.ContainsKey("redirectedToLatest"))
+        {
+            <div class="alert alert-warning" role="alert">
+                You were redirected from an older docs version to v@(Version) docs.
+            </div>
+        }
+        @((MarkupString)_content!)
+    }
 </div>
 
 @if (_sections.Any())
@@ -18,7 +32,8 @@
             <hr/>
             @foreach (var section in _sections)
             {
-                <a class="nav-link link-secondary w-100" href="@(NavigationManager.Uri)#@(section.id)">@((MarkupString)section.title)</a>
+                <a class="nav-link link-secondary w-100"
+                   href="@(NavigationManager.Uri)#@(section.id)">@((MarkupString)section.title)</a>
             }
         </nav>
     </div>
@@ -28,34 +43,36 @@
     private string? _content = default!;
     private List<(string id, string title)> _sections = [];
 
-    [Parameter]
-    public Version Version { get; set; } = default!;
+    [Parameter] public Version Version { get; set; } = default!;
 
-    [Parameter]
-    public string PageId { get; set; } = default!;
+    [Parameter] public string PageId { get; set; } = default!;
 
-    [CascadingParameter]
-    public HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] public HttpContext HttpContext { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
+        var latestReleventVersion = DocVersionService.LatestMajorVersions.FirstOrDefault(v => v.Version.Major == Version.Major);
+        if (latestReleventVersion is not null && Version != latestReleventVersion.Version)
+        {
+            NavigationManager.NavigateTo($"https://{HttpContext.Request.Host}/MultiTenant/Docs/v{latestReleventVersion.Version}/{PageId}?redirectedToLatest");
+        }
+
         var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"docs/v{Version}/{PageId}.md");
         if (fileInfo.Exists)
         {
             var readStream = fileInfo.CreateReadStream();
             using var textReader = new StreamReader(readStream);
             var markdown = await textReader.ReadToEndAsync();
-            
+
             // prepend desired path to local links since the base href is set to "/"
             var path = $"MultiTenant/Docs/v{Version}";
             markdown = Regex.Replace(markdown, @"\[(.+?)\]\(((?!https?|#).+?)\)", m => $"[{m.Groups[1]}]({path}/{m.Groups[2]})");
-            
+
             // Prepend desired path local anchors
             markdown = Regex.Replace(markdown, @"\[(.+?)\]\((#.+?)\)", m => $"[{m.Groups[1]}]({path}/{PageId}{m.Groups[2]})");
-            
+
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             _content = Markdown.ToHtml(markdown, pipeline);
-            
 
             var sections = Regex.Matches(_content, """^<h2 id="(.+?)">(.+)</h2>$""", RegexOptions.Multiline);
             foreach (Match section in sections)
@@ -64,10 +81,5 @@
                 _sections.Add((section.Groups[1].Value, title));
             }
         }
-        else
-        {
-            _content = """<p class="text-muted lead">Hm, there doesn't seem to be anything here. Were you looking for the <a href="MultiTenant/Docs">docs</a>?</p>""";
-        }
     }
-
 }

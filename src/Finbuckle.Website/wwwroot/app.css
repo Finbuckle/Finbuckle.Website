@@ -102,7 +102,7 @@ h2 {
 
 blockquote {
     font-style: italic;
-    border-left: 4px solid var(--fb-light-blue);
+    border-left: 4px solid var(--fb-orange);
     padding-left: 1rem;
     width: 67%;
     margin: 1rem auto 1rem 3rem ;
