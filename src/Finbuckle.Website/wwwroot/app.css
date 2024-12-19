@@ -6,22 +6,6 @@
     --fb-light-blue: #3c6997;
 }
 
-/*.was-validated:invalid {*/
-/*    box-shadow: 0 0 5px 1px red;*/
-/*}*/
-
-/*input:focus:invalid {*/
-/*    box-shadow: none;*/
-/*}*/
-
-/*textarea:invalid {*/
-/*    box-shadow: 0 0 5px 1px red;*/
-/*}*/
-
-/*textarea:focus:invalid {*/
-/*    box-shadow: none;*/
-/*}*/
-
 html {
     scroll-behavior: smooth;
 }
