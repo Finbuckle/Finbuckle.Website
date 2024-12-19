@@ -87,11 +87,11 @@
 </div>
 
 @code {
-    private DocVersion? _docVersion = default!;
+    private DocVersion? _docVersion = null!;
 
-    [Parameter] public string PageId { get; set; } = default!;
+    [Parameter] public string PageId { get; set; } = null!;
 
-    [Parameter] public Version Version { get; set; } = default!;
+    [Parameter] public Version Version { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,7 +1,6 @@
 @page "/MultiTenant/Docs/{PageId?}"
-@page "/MultiTenant/Docs/{Version}/{PageId}"
+@page "/MultiTenant/Docs/{Version}/{PageId?}"
 @using Finbuckle.Website.Infrastructure
-@using Octokit
 @inject DocVersionService DocVersionService
 @inject NavigationManager NavigationManager
 
@@ -45,8 +44,8 @@
 </div>
 
 @code {
-    private Version _version = default!;
-    private string _pageId;
+    private Version? _version;
+    private string _pageId = null!;
 
     [Parameter]
     public string? Version { get; set; }
@@ -55,19 +54,20 @@
     public string? PageId { get; set; }
 
     [CascadingParameter]
-    public HttpContext HttpContext { get; set; } = default!;
+    public HttpContext HttpContext { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        if (Version is null)
-        {
-            _version = DocVersionService.LatestVersion;
-        }
-        else if (!System.Version.TryParse(Version.Remove(0, 1), out _version))
-            _version = new Version();
-
+        if (System.Version.TryParse((PageId ?? "v")[1..], out _version))
+            PageId = null;
         _pageId = PageId ?? "Introduction";
-        
+
+        if (_version is null)
+        {
+            System.Version.TryParse((Version ?? "v")[1..], out _version!);
+            _version ??= DocVersionService.LatestVersion;
+        }
+
         if (Version is null || PageId is null)
         {
             // redirect to the default page
