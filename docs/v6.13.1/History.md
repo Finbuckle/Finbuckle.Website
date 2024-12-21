@@ -13,7 +13,7 @@
 
 ### Features
 
-* .net8.0 LTS release support ([#770](https://github.com/Finbuckle/Finbuckle.MultiTenant/issues/770)) ([d7f08f9](https://github.com/Finbuckle/Finbuckle.MultiTenant/commit/d7f08f94896b8efa8ca1877bcb0c4920b98ba049))
+* net8.0 LTS release support ([#770](https://github.com/Finbuckle/Finbuckle.MultiTenant/issues/770)) ([d7f08f9](https://github.com/Finbuckle/Finbuckle.MultiTenant/commit/d7f08f94896b8efa8ca1877bcb0c4920b98ba049))
 
 
 ### Bug Fixes

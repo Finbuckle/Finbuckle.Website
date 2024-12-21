@@ -72,6 +72,10 @@ h2 {
     color: var(--fb-light-blue);
 }
 
+.btn-fb-light-blue {
+    background-color: var(--fb-light-blue);
+}
+
 .service-card {
     /*width: 18rem;*/
     height: 100%;
