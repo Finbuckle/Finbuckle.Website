@@ -58,7 +58,7 @@ in the order registered. See [MultiTenant Strategies](Strategies) for more infor
 - `WithBasePathStrategy`
 - `WithClaimStrategy`
 - `WithDelegateStrategy`
-- `WithHeaderStrateg`y
+- `WithHeaderStrategy`
 - `WithHostStrategy`
 - `WithRouteStrategy`
 - `WithSessionStrategy`
