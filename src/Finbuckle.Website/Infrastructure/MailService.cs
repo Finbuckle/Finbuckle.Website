@@ -5,8 +5,14 @@ using Microsoft.Extensions.Options;
 
 namespace Finbuckle.Website.Infrastructure;
 
-public class MailService(IOptions<AmazonSesOptions> options)
+public class MailService(IOptions<MailService.AmazonSesOptions> options)
 {
+    public class AmazonSesOptions
+    {
+        public string Key { get; set; } = string.Empty;
+        public string Secret { get; set; } = string.Empty;
+    }
+    
     public async Task SendTextEmailAsync(string email, string subject, string body)
     {
         const string senderAddress = "noreply@finbuckle.com";

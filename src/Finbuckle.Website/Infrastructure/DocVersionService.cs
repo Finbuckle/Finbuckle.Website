@@ -8,37 +8,36 @@ namespace Finbuckle.Website.Infrastructure;
 
 public class DocVersionService
 {
-    public DocVersionService(IWebHostEnvironment webHostEnvironment)
+    public class DocVersion
+    {
+        public Version Version { get; init; } = new();
+        public Dictionary<string, string> Index { get; init; } = [];
+    }
+    
+    public DocVersionService(IWebHostEnvironment webHostEnvironment, ILogger<DocVersionService> logger)
     {
         WebHostEnvironment = webHostEnvironment;
+        Logger = logger;
     }
-
-    // private static HttpClient HttpClient
-    // {
-    //     get
-    //     {
-    //         var client = new HttpClient();
-    //         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Finbuckle.Website", null));
-    //
-    //         return client;
-    //     }
-    // }
     
     private IWebHostEnvironment WebHostEnvironment { get; }
+    private ILogger<DocVersionService> Logger { get; }
 
     public async Task LoadAsync()
     {
         var fileProvider = WebHostEnvironment.ContentRootFileProvider;
         
         var docFolders = fileProvider.
-            GetDirectoryContents("docs").
+            GetDirectoryContents("content/docs").
             Select(f => f.Name);
         
         var versions = new List<DocVersion>();
 
         foreach (var docFolder in docFolders)
         {
-            var indexStream = fileProvider.GetFileInfo($"docs/{docFolder}/Index.md").CreateReadStream();
+            Logger.LogInformation($"Processing folder: {docFolder}");
+            
+            var indexStream = fileProvider.GetFileInfo($"content/docs/{docFolder}/Index.md").CreateReadStream();
             using var reader = new StreamReader(indexStream);
             var indexRaw = await reader.ReadToEndAsync();
             

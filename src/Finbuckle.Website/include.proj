@@ -1,7 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup>
-        <Content Include="..\..\docs\**">
-            <Link>docs\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        <Content Include="..\..\content\docs\**">
+            <Link>content\docs\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\..\content\blog\**">
+            <Link>content\blog\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

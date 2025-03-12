@@ -17,13 +17,16 @@ builder.Services.AddRazorComponents();
 // builder.Services.Configure<GitHubSponsorServiceOptions>(builder.Configuration.GetSection("GitHubSponsorServiceOptions"));
 
 builder.Services.AddSingleton<MailService>();
-builder.Services.Configure<AmazonSesOptions>(builder.Configuration.GetSection("AmazonSesOptions"));
+builder.Services.Configure<MailService.AmazonSesOptions>(builder.Configuration.GetSection("AmazonSesOptions"));
 
 builder.Services.AddSingleton<DocVersionService>();
+
+builder.Services.AddSingleton<BlogService>();
 
 var app = builder.Build();
 
 await app.Services.GetService<DocVersionService>()!.LoadAsync();
+// await app.Services.GetService<BlogService>()!.LoadAsync();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

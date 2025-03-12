@@ -57,7 +57,7 @@
             NavigationManager.NavigateTo($"https://{HttpContext.Request.Host}/MultiTenant/Docs/v{latestReleventVersion.Version}/{PageId}?redirectedToLatest");
         }
 
-        var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"docs/v{Version}/{PageId}.md");
+        var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"content/docs/v{Version}/{PageId}.md");
         if (fileInfo.Exists)
         {
             var readStream = fileInfo.CreateReadStream();
