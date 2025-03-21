@@ -45,7 +45,7 @@ type is for several instances of `DelegateStrategy` utilizing distinct logic or 
 > NuGet package: Finbuckle.MultiTenant
 
 Always uses the same identifier to resolve the tenant. Often useful in testing or to resolve to a fallback or default
-tenant by registering the strategy last.
+tenant. This strategy will run last no matter where it is configured.
 
 Configure by calling `WithStaticStrategy` after `AddMultiTenant<TTenantInfo>` and passing in the identifier to use for
 tenant resolution:
@@ -61,11 +61,13 @@ builder.Services.AddMultiTenant<TenantInfo>()
 
 Uses a provided `Func<object, Task<string>>` to determine the tenant. For example the lambda
 function `async context => "initech"` would use "initech" as the identifier when resolving the tenant for every request.
-This strategy is good to use for testing or simple logic. This strategy is configured multiple times and will run in the
-order configured.
+This strategy is good to use for testing or simple logic. This strategy can be used multiple times and will run
+in the order configured.
 
 Configure by calling `WithDelegateStrategy` after `AddMultiTenant<TTenantInfo>` A `Func<object, Task<string?>>`is passed
-in which will be used with each request to resolve the tenant. A lambda or async lambda can be used as the parameter:
+in which will be used with each request to resolve the tenant. A lambda or async lambda can be used as the parameter.
+Alternatively, `WithDelegateStrategy<TContext, TTenantInfo>` accepts a typed context parameter. Tenant resolution will
+ignore this strategy if the context is not of the correct type:
 
 ```csharp
 // use async logic to get the tenant identifier
@@ -75,21 +77,41 @@ builder.Services.AddMultiTenant<TenantInfo>()
         string? tenantIdentifier = await DoSomethingAsync(context);
         return tenantIdentifier
     })...
-    
- // or do it without async
+
+// or register with a typed lambda, HttpContext in this case
 builder.Services.AddMultiTenant<TenantInfo>()
-    .WithDelegateStrategy(context =>
-    {
-        var httpContext = context as HttpContext;
-        if (httpContext == null)
-            return null;
-        
+    .WithDelegateStrategy<HttpContext, TenantInfo>(httpContext =>
+    {      
         httpContext.Request.Query.TryGetValue("tenant", out StringValues tenantIdentifier);
         
         if (tenantIdentifier is null)
             return Task.FromValue<string?>(null);
         
         return Task.FromValue(tenantIdentifier.ToString());
+    })...
+```
+
+## HttpContext Strategy
+
+> NuGet package: Finbuckle.MultiTenant.AspNetCore
+
+Uses a delegate that takes an `HttpContext` parameter to determine the tenant identifier. When used with the ASP.NET
+Core middleware each request's`HttpConeext` is passed to the strategy. This strategy can be used multiple times and will
+run in the order configured. Tenant resolution will ignore this strategy if the context is not of the correct type.
+
+Configure by calling `WithHttpContextStrategy` after `AddMultiTenant<TTenantInfo>`:
+
+```csharp
+builder.Services.AddMultiTenant<TenantInfo>()
+    .WithHttpContextStrategy(async httpContext =>
+    {
+         var identifier = httpContext.Request.Query["tenant"];
+         
+         // query value will be empty if the value didn't exist in the request
+         if(identifier == string.Empty)
+             return null;
+         
+         return identifier;
     })...
 ```
 
@@ -126,15 +148,15 @@ builder.Services.AddMultiTenant<TenantInfo>()
 
 Be aware that relative links to static files will be impacted so css files and other static resources may need to
 be referenced using absolute urls. Alternatively, you can place the `UseStaticFiles` middleware after
-the `UseMultiTenant` middware in the app pipeline configuration.
+the `UseMultiTenant` middleware in the app pipeline configuration.
 
 ## Claim Strategy
 
 > NuGet package: Finbuckle.MultiTenant.AspNetCore
 
-Uses a claim to determine the tenant identifier. By default the first claim value with type `__tenant__` is used, but a
+Uses a claim to determine the tenant identifier. By default, the first claim value with type `__tenant__` is used, but a
 custom type name can also be used. This strategy uses the default authentication scheme, which is usually cookie based,
-but does not go so far as to set `HttpContext.User`. Thus the ASP.NET Core authentication middleware should still be
+but does not go so far as to set `HttpContext.User`. Thus, the ASP.NET Core authentication middleware should still be
 used as normal, and in most use cases should come after `UseMultiTenant`.
 
 Note that this strategy is does not work well with per-tenant cookie names since it must know the cookie name before the
@@ -185,7 +207,7 @@ tenant without invoking the expensive strategy.
 Uses the `__tenant__` route parameter (or a specified route parameter) to determine the tenant. For example, a request
 to "https://www.example.com/initech/home/" and a route configuration of `{__tenant__}/{controller=Home}/{action=Index}`
 would use "initech" as the identifier when resolving the tenant. The `__tenant__` parameter can be placed anywhere in
-the route path configuration. If explicity calling `UseRouting` in your app pipline make sure to place it
+the route path configuration. If explicitly calling `UseRouting` in your app pipeline make sure to place it
 before `WithRouteStrategy`.
 
 Configure by calling `WithRouteStrategy` after `AddMultiTenant<TTenantInfo>`. A custom route parameter can also be
@@ -209,7 +231,7 @@ app.UseMultiTenant();
 
 > NuGet package: Finbuckle.MultiTenant.AspNetCore
 
-Uses request's host value to determine the tenant. By default the first host segment is used. For example, a request
+Uses request's host value to determine the tenant. By default, the first host segment is used. For example, a request
 to "https://initech.example.com/abc123" would use "initech" as the identifier when resolving the tenant. This strategy
 can be difficult to use in a development environment. Make sure the development system is configured properly to allow
 subdomains on `localhost`. This strategy is configured as a singleton.
@@ -246,7 +268,8 @@ builder.Services.AddMultiTenant<TenantInfo>()
 
 > NuGet package: Finbuckle.MultiTenant.AspNetCore
 
-Uses an HTTP request header to determine the tenant identifier. By default the header with key `__tenant__` is used, but
+Uses an HTTP request header to determine the tenant identifier. By default, the header with key `__tenant__` is used,
+but
 a custom key can also be used.
 
 Configure by calling `WithHeaderStrategy` after `AddMultiTenant<TTenantInfo>`. An overload to accept a custom claim type

@@ -1,4 +1,4 @@
-# ![Finbuckle Logo](https://www.finbuckle.com/images/finbuckle-32x32-gh.png) Finbuckle.MultiTenant <span class="_version">8.1.1</span>
+# ![Finbuckle Logo](https://www.finbuckle.com/images/finbuckle-32x32-gh.png) Finbuckle.MultiTenant <span class="_version">9.1.2</span>
 
 ## About Finbuckle.MultiTenant
 
@@ -6,7 +6,7 @@ Finbuckle.MultiTenant is open source multitenancy middleware library for .NET. I
 app behavior, and per-tenant data isolation.
 See [https://www.finbuckle.com/multitenant](https://www.finbuckle.com/multi-tenant) for more details and documentation.
 
-**This release supports .NET 8, .NET 7, and .NET 6.**
+**This release supports .NET 9 and .NET 8.**
 
 Beginning with Finbuckle.MultiTenant 8.0.0 major version releases align with .NET major version releases and target all
 Microsoft supported major .NET versions at the time of initial release.
@@ -16,9 +16,25 @@ fixes will be released for prior versions which target .NET versions supported b
 
 In general, you should target the version of Finbuckle.MultiTenant that matches your .NET version.
 
-## Main Build and Test Status
+## Open Source Support
 
-![Build and Test Status](https://github.com/Finbuckle/Finbuckle.MultiTenant/actions/workflows/ci.yml/badge.svg)
+Your support helps keep the project going and is greatly appreciated!
+
+Finbuckle.MultiTenant is primarily supported by its [GitHub sponsors](https://github.com/sponsors/Finbuckle) and [contributors](https://github.com/Finbuckle/Finbuckle.MultiTenant/graphs/contributors).
+
+Additional support is provided by the following organizations:
+
+<p><a href="https://www.digitalocean.com/">
+  <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" alt="Digital Ocean logo" height="40">
+</a></p>
+
+<p><a href="https://www.github.com/">
+  <img src="https://github.githubassets.com/assets/GitHub-Logo-ee398b662d42.png" alt="GitHub logo" height="40">
+</a></p>
+
+<p><a href="https://www.jetbrains.com/">
+  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg" alt="Jetbrains logo" height="40">
+</a></p>
 
 ## License
 
