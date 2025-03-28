@@ -220,7 +220,7 @@
     protected override async Task OnInitializedAsync()
     {
         var version = DocVersionService.LatestVersion;
-        var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"docs/v{version}/GettingStarted.md");
+        var fileInfo = WebHostEnvironment.ContentRootFileProvider.GetFileInfo($"content/docs/v{version}/GettingStarted.md");
         if (fileInfo.Exists)
         {
             var readStream = fileInfo.CreateReadStream();
