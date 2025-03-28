@@ -1,9 +1,5 @@
-using System.Net.Http.Headers;
 using Finbuckle.Website.Infrastructure;
 using Finbuckle.Website.Components;
-using Finbuckle.Website.Infrastructure.GitHubSponsorService;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.SystemTextJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,15 +14,13 @@ builder.Services.AddRazorComponents();
 
 builder.Services.AddSingleton<MailService>();
 builder.Services.Configure<MailService.AmazonSesOptions>(builder.Configuration.GetSection("AmazonSesOptions"));
-
 builder.Services.AddSingleton<DocVersionService>();
-
 builder.Services.AddSingleton<BlogService>();
 
 var app = builder.Build();
 
-await app.Services.GetService<DocVersionService>()!.LoadAsync();
-// await app.Services.GetService<BlogService>()!.LoadAsync();
+await app.Services.GetRequiredService<DocVersionService>().LoadAsync();
+await app.Services.GetRequiredService<BlogService>().LoadAsync();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

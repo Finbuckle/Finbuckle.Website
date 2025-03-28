@@ -9,16 +9,18 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.SimpleEmailV2" Version="3.7.303.3" />
-        <PackageReference Include="BaGetter.Protocol" Version="1.4.1" />
         <PackageReference Include="GraphQL.Client" Version="6.0.5" />
         <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.0.5" />
         <PackageReference Include="Markdig" Version="0.37.0" />
-        <PackageReference Include="Octokit" Version="11.0.1" />
         <PackageReference Include="YamlDotNet" Version="16.3.0" />
     </ItemGroup>
 
     <ItemGroup>
       <None Include="include.proj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Pages\Blog\Home.razor" />
     </ItemGroup>
     
     <Import Project="include.proj" />

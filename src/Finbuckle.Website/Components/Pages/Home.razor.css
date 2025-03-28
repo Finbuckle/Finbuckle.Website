@@ -1,0 +1,11 @@
+.header {
+    background: rgba(60, 105, 151, 0.33);
+    /*background: linear-gradient(45deg, rgba(60, 105, 151, 0.67) 10%, rgba(60, 105, 151, 0.75) 33%, rgba(255, 109, 11, 0.75) 67%, rgba(255, 109, 11, 0.67) 90%);*/
+    background: linear-gradient(to top right, var(--fb-blue), var(--fb-orange)),
+                linear-gradient(rgba(255, 255, 255, 0.33), rgba(255, 255, 255, 0.33));
+}
+
+.feature-icon-small {
+    width: 3rem;
+    height: 3rem;
+}

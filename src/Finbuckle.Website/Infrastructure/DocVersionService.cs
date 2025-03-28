@@ -1,8 +1,4 @@
-using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
-using BaGetter.Protocol;
-using BaGetter.Protocol.Models;
-using Microsoft.Extensions.FileProviders;
 
 namespace Finbuckle.Website.Infrastructure;
 
