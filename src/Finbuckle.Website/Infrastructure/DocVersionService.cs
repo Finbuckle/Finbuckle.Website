@@ -2,26 +2,17 @@ using System.Text.RegularExpressions;
 
 namespace Finbuckle.Website.Infrastructure;
 
-public class DocVersionService
+public class DocVersionService(IWebHostEnvironment webHostEnvironment, ILogger<DocVersionService> logger)
 {
     public class DocVersion
     {
         public Version Version { get; init; } = new();
         public Dictionary<string, string> Index { get; init; } = [];
     }
-    
-    public DocVersionService(IWebHostEnvironment webHostEnvironment, ILogger<DocVersionService> logger)
-    {
-        WebHostEnvironment = webHostEnvironment;
-        Logger = logger;
-    }
-    
-    private IWebHostEnvironment WebHostEnvironment { get; }
-    private ILogger<DocVersionService> Logger { get; }
 
     public async Task LoadAsync()
     {
-        var fileProvider = WebHostEnvironment.ContentRootFileProvider;
+        var fileProvider = webHostEnvironment.ContentRootFileProvider;
         
         var docFolders = fileProvider.
             GetDirectoryContents("content/docs").
@@ -31,7 +22,7 @@ public class DocVersionService
 
         foreach (var docFolder in docFolders)
         {
-            Logger.LogInformation($"Processing folder: {docFolder}");
+            logger.LogInformation("Processing folder: {docFolder}", docFolder);
             
             var indexStream = fileProvider.GetFileInfo($"content/docs/{docFolder}/Index.md").CreateReadStream();
             using var reader = new StreamReader(indexStream);

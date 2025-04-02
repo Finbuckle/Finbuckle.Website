@@ -1,5 +1,7 @@
 using Finbuckle.Website.Infrastructure;
 using Finbuckle.Website.Components;
+using Finbuckle.Website.Infrastructure.GitHubService;
+using Octokit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHostedService<BackgroundSyncService>();
 builder.Services.AddRazorComponents();
 
-// builder.Services.AddSingleton<GraphQLHttpClient>(sp =>
-//     new GraphQLHttpClient("https://api.github.com/graphql", new SystemTextJsonSerializer()));
-// builder.Services.AddTransient<GitHubSponsorService>();
-// builder.Services.Configure<GitHubSponsorServiceOptions>(builder.Configuration.GetSection("GitHubSponsorServiceOptions"));
-
+builder.Services.AddSingleton<GitHubService>();
+builder.Services.Configure<GitHubServiceOptions>(builder.Configuration.GetSection("GitHubSponsorServiceOptions"));
 builder.Services.AddSingleton<MailService>();
 builder.Services.Configure<MailService.AmazonSesOptions>(builder.Configuration.GetSection("AmazonSesOptions"));
 builder.Services.AddSingleton<DocVersionService>();
@@ -21,6 +20,7 @@ var app = builder.Build();
 
 await app.Services.GetRequiredService<DocVersionService>().LoadAsync();
 await app.Services.GetRequiredService<BlogService>().LoadAsync();
+await app.Services.GetRequiredService<GitHubService>().LoadAsync();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

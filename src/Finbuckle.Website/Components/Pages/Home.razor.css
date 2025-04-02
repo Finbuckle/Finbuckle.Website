@@ -1,8 +1,17 @@
 .header {
     background: rgba(60, 105, 151, 0.33);
-    /*background: linear-gradient(45deg, rgba(60, 105, 151, 0.67) 10%, rgba(60, 105, 151, 0.75) 33%, rgba(255, 109, 11, 0.75) 67%, rgba(255, 109, 11, 0.67) 90%);*/
-    background: linear-gradient(to top right, var(--fb-blue), var(--fb-orange)),
+    background: linear-gradient(to top right, var(--bs-primary), var(--fb-orange)),
                 linear-gradient(rgba(255, 255, 255, 0.33), rgba(255, 255, 255, 0.33));
+}
+
+.feature-product {
+    height: 5rem;
+    width: 18rem;
+}
+
+.feature-contributors {
+    width: 4rem;
+    height: 4rem;
 }
 
 .feature-icon-small {
