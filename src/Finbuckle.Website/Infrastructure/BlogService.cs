@@ -4,16 +4,17 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Finbuckle.Website.Infrastructure;
 
+public record BlogData
+{
+    public string FilePath { get; init; } = string.Empty;
+    public string Date { get; init; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
+    public string Slug { get; init; } = string.Empty;
+    public string[] Tags { get; init; } = [];
+}
+
 public class BlogService
 {
-    public class BlogInfo
-    {
-        public string Date { get; init; } = string.Empty;
-        public string Title { get; init; } = string.Empty;
-        public string Slug { get; init; } = string.Empty;
-        public string[] Tags { get; init; } = [];
-    }
-    
     public BlogService(IWebHostEnvironment webHostEnvironment, ILogger<BlogService> logger)
     {
         WebHostEnvironment = webHostEnvironment;
@@ -23,37 +24,67 @@ public class BlogService
     private IWebHostEnvironment WebHostEnvironment { get; }
     private ILogger<BlogService> Logger { get; }
 
+    public List<BlogData> BlogData { get; private set; }= [];
+
     public async Task LoadAsync()
     {
-        var fileProvider = WebHostEnvironment.ContentRootFileProvider;
-        
-        var files = fileProvider.
-            GetDirectoryContents("content/blog").
-            Select(f => f.Name);
+        var newBlogData = new List<BlogData>();
 
-        var yamlDeserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
+        var fileProvider = WebHostEnvironment.ContentRootFileProvider;
+
+        var files = fileProvider.GetDirectoryContents("content/blog").Select(f => f.Name);
+
+        var yamlDeserializer =
+            new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
 
         foreach (var file in files)
         {
-            Logger.LogInformation($"Processing file: {file}");
+            var filePath = $"content/blog/{file}";
+            Logger.LogInformation("Processing file: {filePath}", filePath);
             
-            var fileStream = fileProvider.GetFileInfo($"content/blog/{file}").CreateReadStream();
-            using var reader = new StreamReader(fileStream);
-            var content = await reader.ReadToEndAsync();
-            
-            // extract the YAML front matter string
-            var match = Regex.Match(content, @"^---\s*([\s\S]+?)\s*---", RegexOptions.Multiline);
+            var content = await File.ReadAllTextAsync(filePath);
+
+            var match = Regex.Match(content, @"^---\s*([\s\S]+?)\s*---");
             if (match.Success)
             {
-                var yaml = match.Groups[1].Value;
-                var blogInfo = yamlDeserializer.Deserialize<BlogInfo>(yaml);
-                
-                // process the blog info into an index
+                try
+                {
+                    var yaml = match.Groups[1].Value;
+                    var blogData = yamlDeserializer.Deserialize<BlogData>(yaml);
+                    blogData = blogData with { FilePath = filePath };
+
+                    newBlogData.Add(blogData);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError("Error parsing YAML in file: {file}", filePath);
+                }
             }
             else
             {
-                Logger.LogWarning($"No YAML front matter found in file: {file}");
+                Logger.LogWarning("No YAML front matter found in file: {file}", filePath);
             }
         }
+
+        BlogData = newBlogData;
+    }
+
+    public BlogData? GetBlogDataBySlug(string slug) =>
+        BlogData.FirstOrDefault(b => string.Equals(slug, b.Slug, StringComparison.OrdinalIgnoreCase));
+
+    public ILookup<string, BlogData> GetBlogDataTagLookup =>
+        BlogData.SelectMany(b => b.Tags.Select(t => t.ToLowerInvariant()), (data, tag) => new { data, tag })
+            .ToLookup(e => e.tag, e => e.data);
+
+    public async Task<string?> GetBlogMarkdownBySlugAsync(string slug)
+    {
+        var blogData = GetBlogDataBySlug(slug);
+        if (blogData == null) return null;
+        var filePath = blogData.FilePath;
+        var content = await File.ReadAllTextAsync(filePath);
+        var match = Regex.Match(content, @"^---\s*([\s\S]+?)\s*---");
+        content = content.Substring(match.Length).Trim();
+
+        return content;
     }
 }

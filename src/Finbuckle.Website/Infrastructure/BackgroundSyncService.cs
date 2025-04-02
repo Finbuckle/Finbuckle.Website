@@ -1,21 +1,14 @@
 namespace Finbuckle.Website.Infrastructure;
 
-public class BackgroundSyncService : BackgroundService
+public class BackgroundSyncService(ILogger<BackgroundSyncService> logger, GitHubService.GitHubService gitHubService) : BackgroundService
 {
-    private readonly ILogger<BackgroundSyncService> _logger;
-
-    public BackgroundSyncService(ILogger<BackgroundSyncService> logger, DocVersionService docVersionService)
-    {
-        _logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using PeriodicTimer timer = new(TimeSpan.FromMinutes(15));
 
         try
         {
-            _logger.LogDebug("Background Sync Service is starting.");
+            logger.LogDebug("Background Sync Service is starting.");
             do
             {
                 await DoSync(stoppingToken);
@@ -23,15 +16,18 @@ public class BackgroundSyncService : BackgroundService
         }
         catch (OperationCanceledException)
         {
-            _logger.LogDebug("Background Sync Service is stopping.");
+            logger.LogDebug("Background Sync Service is stopping.");
         }
     }
 
 
     private async Task DoSync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Background Sync Service is syncing.");
+        logger.LogInformation("Background Sync Service is syncing.");
+
+        logger.LogInformation("gitHubService.LoadAsync()");
+        await gitHubService.LoadAsync();
         
-        _logger.LogInformation("Background Sync Service is finished syncing.");
+        logger.LogInformation("Background Sync Service is finished syncing.");
     }
 }

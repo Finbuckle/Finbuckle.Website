@@ -1,4 +1,4 @@
-namespace Finbuckle.Website.Infrastructure.GitHubSponsorService;
+namespace Finbuckle.Website.Infrastructure.GitHubService;
 
 public class Node
 {

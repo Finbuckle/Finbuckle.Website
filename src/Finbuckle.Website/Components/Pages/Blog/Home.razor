@@ -1,0 +1,25 @@
+@page "/Blog"
+@using Finbuckle.Website.Infrastructure
+@inject BlogService BlogService
+
+<PageTitle>Blog</PageTitle>
+
+<ul class="">
+    @foreach (var item in BlogService.BlogData)
+    {
+        <li>
+            <h2>@item.Title</h2>
+            <h3>@item.Date</h3>
+            <h4>@string.Join(" ", item.Tags)</h4>
+        </li>
+    }
+</ul>
+
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+}
