@@ -1,12 +1,18 @@
-.header {
-    background: rgba(60, 105, 151, 0.33);
-    background: linear-gradient(to top right, var(--bs-primary), var(--fb-orange)),
-                linear-gradient(rgba(255, 255, 255, 0.33), rgba(255, 255, 255, 0.33));
+.feature-product {
+    width: 20rem;
+    height: 5rem;
 }
 
-.feature-product {
-    height: 5rem;
-    width: 18rem;
+.feature-logo {
+    width: 20rem;
+    object-fit: contain;
+}
+
+.divider-diagonal {
+    width: 100%;
+    height: 3rem;
+    background: var(--bs-primary-bg-subtle);
+    background: linear-gradient(to top left, var(--bs-primary-bg-subtle), 50%, rgba(255,255,255,0) 51%);
 }
 
 .feature-contributors {

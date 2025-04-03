@@ -1,115 +1,42 @@
 :root {
-    --fb-dark-orange: #b74d06;
     --fb-orange: #ff6d0b;
-    --fb-gray: #bfbfbf;
-    --fb-blue: #094074;
-    --fb-light-blue: #3c6997;
 }
 
-/*html {*/
-/*    scroll-behavior: smooth;*/
-/*}*/
+.active {
+    font-weight: bold;
+}
 
-/*h2 {*/
-/*    margin-top: 3rem;*/
-/*}*/
+.header {
+    background: rgba(60, 105, 151, 0.33);
+    background: linear-gradient(to top right, var(--bs-primary), var(--fb-orange)),
+    linear-gradient(rgba(255, 255, 255, 0.33), rgba(255, 255, 255, 0.33));
+}
 
-/*.text-fb-blue {*/
-/*    color: var(--fb-light-blue);*/
-/*}*/
+.feature-card {
+    height: 120px;
+    color: var(--bs-secondary-color);
+}
 
-/*.bg-fb-blue {*/
-/*    border-color: var(--fb-light-blue);*/
-/*    background-color: var(--fb-light-blue);*/
-/*}*/
+.feature-card-icon {
+    color: var(--bs-secondary-color);
+}
 
-/*.bg-fb-blue:hover {*/
-/*    border-color: var(--fb-blue);*/
-/*    background-color: var(--fb-blue);*/
-/*}*/
+blockquote {
+    font-style: italic;
+    border-left: 4px solid var(--bs-primary-bg-subtle);
+    padding-left: 1rem;
+    width: 67%;
+    margin: 1rem auto 1rem 3rem ;
+}
 
-/*.active {*/
-/*    font-weight: bold;*/
-/*}*/
+pre > code {
+    display: block;
+    margin-left: 2rem;
+    padding-left: 2rem;
+    border-left: 1px solid lightgrey;
+    word-wrap: normal;
+}
 
-/*.vh-100-with-navbar {*/
-/*    height: calc(100vh - 56px);*/
-/*}*/
-
-/*.vh-center-with-navbar {*/
-/*    position: relative;*/
-/*    top: -28px;*/
-/*}*/
-
-/*.bg-fb-squares-light {*/
-/*    !* background by SVGBackgrounds.com *!*/
-/*    background-size: cover;*/
-/*    background: #000000 url("/images/squares-light.svg") center;*/
-/*    min-height: 500px;*/
-/*}*/
-
-/*.bg-fb-dark {*/
-/*    background-image: url("/images/background3.jpg");*/
-/*    background-size: cover;*/
-/*    min-height: 500px;*/
-/*}*/
-
-/*.bg-fb-light {*/
-/*    min-height: 500px;*/
-/*}*/
-
-/*.big-image img{*/
-/*    max-height: 256px;*/
-/*    object-fit: contain;*/
-/*}*/
-
-/*.feature-card {*/
-/*    height: 120px;*/
-/*    color: var(--fb-light-blue);*/
-/*}*/
-
-/*.feature-card-icon {*/
-/*    color: var(--fb-light-blue);*/
-/*}*/
-
-/*.btn-fb-light-blue {*/
-/*    background-color: var(--fb-light-blue);*/
-/*}*/
-
-/*.service-card {*/
-/*    !*width: 18rem;*!*/
-/*    height: 100%;*/
-/*    color: var(--fb-light-blue);*/
-/*}*/
-
-/*blockquote {*/
-/*    font-style: italic;*/
-/*    border-left: 4px solid var(--fb-orange);*/
-/*    padding-left: 1rem;*/
-/*    width: 67%;*/
-/*    margin: 1rem auto 1rem 3rem ;*/
-/*}*/
-
-/*pre > code {*/
-/*    display: block;*/
-/*    margin-left: 2rem;*/
-/*    padding-left: 2rem;*/
-/*    border-left: 1px solid lightgrey;*/
-/*    word-wrap: normal;*/
-/*}*/
-
-/*pre + p {*/
-/*    margin-top: 3rem;*/
-/*}*/
-
-/*.parallax {*/
-/*    background-image: url("../images/background3.jpg");*/
-/*    height: 80px;*/
-/*    background-attachment: fixed;*/
-/*    background-position: center;*/
-/*    background-size: cover;*/
-/*}*/
-
-/*.validation-summary-errors {*/
-/*    color: red;*/
-/*}*/
+pre + p {
+    margin-top: 3rem;
+}

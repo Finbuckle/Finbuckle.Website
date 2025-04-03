@@ -4,6 +4,7 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.Extensions.Options;
 using Octokit;
+using Octokit.Internal;
 
 namespace Finbuckle.Website.Infrastructure.GitHubService;
 
@@ -22,7 +23,9 @@ public class GitHubService(IOptionsMonitor<GitHubServiceOptions> options)
 
     private async Task<List<SponsorOrContributor>> GetContributorsAsync()
     {
-        var client = new GitHubClient(new Octokit.ProductHeaderValue("Finbuckle.Website"));
+        var creds = new InMemoryCredentialStore(new Credentials(options.CurrentValue.Token));
+        var client = new GitHubClient(new Octokit.ProductHeaderValue("Finbuckle.Website"), creds);
+        
         var list = new List<RepositoryContributor>();
         foreach (var repo in await client.Repository.GetAllForOrg(options.CurrentValue.Organization))
         {
