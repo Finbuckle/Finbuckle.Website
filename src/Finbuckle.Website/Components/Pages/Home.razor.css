@@ -1,10 +1,10 @@
 .feature-product {
-    width: 20rem;
-    height: 5rem;
+    height: 8rem;
+    width: 16rem;
 }
 
 .feature-logo {
-    width: 20rem;
+    width: 12rem;
     object-fit: contain;
 }
 
@@ -13,14 +13,4 @@
     height: 3rem;
     background: var(--bs-primary-bg-subtle);
     background: linear-gradient(to top left, var(--bs-primary-bg-subtle), 50%, rgba(255,255,255,0) 51%);
-}
-
-.feature-contributors {
-    width: 4rem;
-    height: 4rem;
-}
-
-.feature-icon-small {
-    width: 3rem;
-    height: 3rem;
 }
