@@ -64,7 +64,9 @@ This strategy is good to use for testing or simple logic. This strategy can be u
 in the order configured.
 
 Configure by calling `WithDelegateStrategy` after `AddMultiTenant<TTenantInfo>` A `Func<object, Task<string?>>`is passed
-in which will be used with each request to resolve the tenant. A lambda or async lambda can be used as the parameter:
+in which will be used with each request to resolve the tenant. A lambda or async lambda can be used as the parameter.
+Alternatively, `WithDelegateStrategy<TContext, TTenantInfo>` accepts a typed context parameter. Tenant resolution will
+ignore this strategy if the context is not of the correct type:
 
 ```csharp
 // use async logic to get the tenant identifier
@@ -74,21 +76,41 @@ builder.Services.AddMultiTenant<TenantInfo>()
         string? tenantIdentifier = await DoSomethingAsync(context);
         return tenantIdentifier
     })...
-    
- // or do it without async
+
+// or register with a typed lambda, HttpContext in this case
 builder.Services.AddMultiTenant<TenantInfo>()
-    .WithDelegateStrategy(context =>
-    {
-        var httpContext = context as HttpContext;
-        if (httpContext == null)
-            return null;
-        
+    .WithDelegateStrategy<HttpContext, TenantInfo>(httpContext =>
+    {      
         httpContext.Request.Query.TryGetValue("tenant", out StringValues tenantIdentifier);
         
         if (tenantIdentifier is null)
             return Task.FromValue<string?>(null);
         
         return Task.FromValue(tenantIdentifier.ToString());
+    })...
+```
+
+## HttpContext Strategy
+
+> NuGet package: Finbuckle.MultiTenant.AspNetCore
+
+Uses a delegate that takes an `HttpContext` parameter to determine the tenant identifier. When used with the ASP.NET
+Core middleware each request's`HttpConeext` is passed to the strategy. This strategy can be used multiple times and will
+run in the order configured. Tenant resolution will ignore this strategy if the context is not of the correct type.
+
+Configure by calling `WithHttpContextStrategy` after `AddMultiTenant<TTenantInfo>`:
+
+```csharp
+builder.Services.AddMultiTenant<TenantInfo>()
+    .WithHttpContextStrategy(async httpContext =>
+    {
+         var identifier = httpContext.Request.Query["tenant"];
+         
+         // query value will be empty if the value didn't exist in the request
+         if(identifier == string.Empty)
+             return null;
+         
+         return identifier;
     })...
 ```
 
