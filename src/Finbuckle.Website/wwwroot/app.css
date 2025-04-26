@@ -2,6 +2,10 @@
     --fb-orange: #ff6d0b;
 }
 
+h1:focus {
+    outline: none;
+}
+
 .active {
     font-weight: bold;
 }
